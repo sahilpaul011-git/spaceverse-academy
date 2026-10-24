@@ -47,6 +47,7 @@ export default function OrbitView({
   compact = false,
   onSelect,
   selectedPlanet = null,
+  selectedId = null,
 }) {
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(true);
