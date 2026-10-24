@@ -2,44 +2,38 @@
 import { useEffect, useState } from 'react';
 import { PLANETS } from '../data/planets';
 
+const TEXTURES = {
+  mercury: '2k_mercury.jpg',
+  venus: '2k_venus_surface.jpg',
+  earth: '2k_earth_daymap.jpg',
+  mars: '2k_mars.jpg',
+  jupiter: '2k_jupiter.jpg',
+  saturn: '2k_saturn.jpg',
+  uranus: '2k_uranus.jpg',
+  neptune: '2k_neptune.jpg',
+};
+
+const SIZES = {
+  mercury: 4,
+  venus: 5,
+  earth: 6,
+  mars: 4.5,
+  jupiter: 9,
+  saturn: 8,
+  uranus: 6,
+  neptune: 6,
+};
+
 const ORBIT_COLORS = [
-  '#94a3b8',
-  '#d6a36b',
-  '#60a5fa',
-  '#34d399',
-  '#fb923c',
-  '#e879f9',
-  '#facc15',
-  '#67e8f9',
+  '#94a3b8', '#d6a36b', '#60a5fa', '#34d399',
+  '#fb923c', '#e879f9', '#facc15', '#67e8f9',
 ];
 
-const PLANET_COLORS = {
-  mercury: '#a8a29e',
-  venus: '#fbbf24',
-  earth: '#38bdf8',
-  mars: '#fb7185',
-  jupiter: '#d6a36b',
-  saturn: '#facc15',
-  uranus: '#67e8f9',
-  neptune: '#818cf8',
-};
-
-const PLANET_SIZES = {
-  mercury: 4,
-  venus: 6,
-  earth: 7,
-  mars: 5,
-  jupiter: 12,
-  saturn: 10,
-  uranus: 8,
-  neptune: 8,
-};
-
-function getPlanetId(planet) {
+function planetId(planet) {
   return String(planet.id || planet.name || '').toLowerCase();
 }
 
-function getPlanetName(planet) {
+function planetName(planet) {
   return planet.name || planet.id || 'Planet';
 }
 
@@ -66,27 +60,24 @@ export default function OrbitView({
         const delta = Math.min(timestamp - previous, 50);
         setTime((value) => value + delta * 0.000025 * speed);
       }
-
       previous = timestamp;
       frame = requestAnimationFrame(animate);
     };
 
     frame = requestAnimationFrame(animate);
-
     return () => cancelAnimationFrame(frame);
   }, [playing, speed]);
 
-  const center = 250;
-  const baseOrbit = 22;
-  const orbitGap = 24;
-  const orbitScale = compact ? 0.78 : zoom;
   const planets = PLANETS.filter(
-    (planet) => !planet.dwarf && PLANET_SIZES[getPlanetId(planet)]
+    (planet) => !planet.dwarf && SIZES[planetId(planet)]
   );
+
+  const scale = compact ? 0.78 : zoom;
+  const selected = selectedPlanet ?? selectedId;
 
   return (
     <section className="w-full min-w-0">
-      <div className="mx-auto w-full max-w-[560px] overflow-hidden rounded-3xl border border-indigo-100 bg-slate-950 p-2 shadow-xl sm:p-4">
+      <div className="mx-auto w-full max-w-[560px] overflow-hidden rounded-3xl border border-indigo-100/20 bg-slate-950 p-2 shadow-xl sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 px-2 py-2">
           <div>
             <h2 className="text-lg font-extrabold text-white sm:text-xl">
@@ -96,7 +87,6 @@ export default function OrbitView({
               Explore the eight planets
             </p>
           </div>
-
           {!compact && (
             <span className="rounded-full bg-indigo-500/20 px-3 py-1 text-xs font-semibold text-indigo-200">
               {playing ? 'Orbiting' : 'Paused'}
@@ -107,7 +97,7 @@ export default function OrbitView({
         <svg
           viewBox="0 0 500 500"
           role="img"
-          aria-label="Interactive solar system showing the Sun and eight planets"
+          aria-label="Interactive solar system with textured planets"
           className="block h-auto w-full"
         >
           <defs>
@@ -129,49 +119,66 @@ export default function OrbitView({
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
+
+            {Object.entries(TEXTURES).map(([id, filename]) => (
+              <pattern
+                key={id}
+                id={`texture-${id}`}
+                patternUnits="userSpaceOnUse"
+                x="-12"
+                y="-12"
+                width="24"
+                height="24"
+              >
+                <image
+                  href={`${import.meta.env.BASE_URL}textures/${filename}`}
+                  x="-12"
+                  y="-12"
+                  width="24"
+                  height="24"
+                  preserveAspectRatio="xMidYMid slice"
+                />
+              </pattern>
+            ))}
           </defs>
 
           <rect
-            x="0"
-            y="0"
             width="500"
             height="500"
             rx="22"
             fill="url(#spaceverse-background)"
           />
 
-          {Array.from({ length: 85 }, (_, index) => (
+          {Array.from({ length: 110 }, (_, i) => (
             <circle
-              key={`star-${index}`}
-              cx={(index * 73 + 19) % 490 + 5}
-              cy={(index * 137 + 31) % 490 + 5}
-              r={index % 8 === 0 ? 1.7 : 0.8}
-              fill="#ffffff"
-              opacity={index % 3 === 0 ? 0.85 : 0.4}
+              key={i}
+              cx={(i * 73 + 19) % 490 + 5}
+              cy={(i * 137 + 31) % 490 + 5}
+              r={i % 8 === 0 ? 1.7 : 0.8}
+              fill="white"
+              opacity={i % 3 === 0 ? 0.85 : 0.4}
             />
           ))}
 
-          <g transform={`translate(${center} ${center}) scale(${orbitScale})`}>
+          <g transform={`translate(250 250) scale(${scale})`}>
             {planets.map((planet, index) => {
-              const id = getPlanetId(planet);
-              const orbitRadius = baseOrbit + (index + 1) * orbitGap;
-              const orbitAngle =
-                time / Math.sqrt(index + 1) + index * 0.72;
-              const x = Math.cos(orbitAngle) * orbitRadius;
-              const y = Math.sin(orbitAngle) * orbitRadius;
-              const planetSize = PLANET_SIZES[id];
-              const color = PLANET_COLORS[id] || ORBIT_COLORS[index];
+              const id = planetId(planet);
+              const radius = 22 + (index + 1) * 24;
+              const angle = time / Math.sqrt(index + 1) + index * 0.72;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
+              const size = SIZES[id];
               const isSelected =
-                selectedPlanet === planet.id ||
-                selectedPlanet === id ||
-                selectedPlanet === getPlanetName(planet);
+                selected === planet.id ||
+                selected === id ||
+                selected === planetName(planet);
 
               return (
                 <g key={id}>
                   <circle
                     cx="0"
                     cy="0"
-                    r={orbitRadius}
+                    r={radius}
                     fill="none"
                     stroke={ORBIT_COLORS[index]}
                     strokeWidth="0.7"
@@ -180,18 +187,15 @@ export default function OrbitView({
                   />
 
                   <g
-                    className="cursor-pointer"
                     role="button"
                     tabIndex={0}
-                    aria-label={`Select ${getPlanetName(planet)}`}
+                    className="cursor-pointer"
+                    aria-label={`Select ${planetName(planet)}`}
                     onClick={() => onSelect?.(planet.id)}
                     onKeyDown={(event) => {
-                      if (
-                        event.key === 'Enter' ||
-                        event.key === ' '
-                      ) {
+                      if (event.key === 'Enter' || event.key === ' ') {
                         event.preventDefault();
-                        onSelect?.(planet);
+                        onSelect?.(planet.id);
                       }
                     }}
                   >
@@ -199,31 +203,22 @@ export default function OrbitView({
                       <circle
                         cx={x}
                         cy={y}
-                        r={planetSize + 5}
+                        r={size + 4}
                         fill="none"
-                        stroke="#ffffff"
-                        strokeWidth="1.5"
-                        opacity="0.9"
+                        stroke="white"
+                        strokeWidth="1.4"
                       />
                     )}
-
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={planetSize + 3}
-                      fill={color}
-                      opacity="0.14"
-                    />
 
                     {id === 'saturn' && (
                       <ellipse
                         cx={x}
                         cy={y}
-                        rx={planetSize + 7}
-                        ry={planetSize + 2}
+                        rx={size + 5}
+                        ry={size + 1.5}
                         fill="none"
-                        stroke="#fef3c7"
-                        strokeWidth="2.5"
+                        stroke="#e7d2a3"
+                        strokeWidth="2"
                         transform={`rotate(-20 ${x} ${y})`}
                       />
                     )}
@@ -231,31 +226,30 @@ export default function OrbitView({
                     <circle
                       cx={x}
                       cy={y}
-                      r={planetSize}
-                      fill={color}
+                      r={size}
+                      fill={`url(#texture-${id})`}
                       stroke="#ffffff"
-                      strokeOpacity="0.45"
+                      strokeOpacity="0.6"
                       strokeWidth="0.8"
                     />
 
-                    {id === 'earth' && (
-                      <circle
-                        cx={x - 2}
-                        cy={y - 1}
-                        r={planetSize * 0.38}
-                        fill="#22c55e"
-                      />
-                    )}
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r={size}
+                      fill="url(#spaceverse-background)"
+                      opacity="0.12"
+                    />
 
                     {id === 'uranus' && (
                       <ellipse
                         cx={x}
                         cy={y}
-                        rx={planetSize + 3}
-                        ry={planetSize * 0.45}
+                        rx={size + 3}
+                        ry={size * 0.4}
                         fill="none"
                         stroke="#a5f3fc"
-                        strokeWidth="1.2"
+                        strokeWidth="1"
                         transform={`rotate(75 ${x} ${y})`}
                       />
                     )}
@@ -263,16 +257,16 @@ export default function OrbitView({
                     {showLabels && !compact && (
                       <text
                         x={x}
-                        y={y - planetSize - 7}
+                        y={y - size - 7}
                         textAnchor="middle"
                         fontSize="10"
                         fontWeight="700"
-                        fill="#ffffff"
+                        fill="white"
                         stroke="#020617"
                         strokeWidth="2.5"
                         paintOrder="stroke"
                       >
-                        {getPlanetName(planet)}
+                        {planetName(planet)}
                       </text>
                     )}
                   </g>
@@ -281,24 +275,17 @@ export default function OrbitView({
             })}
 
             <circle
-              cx="0"
-              cy="0"
               r="22"
               fill="#f97316"
-              opacity="0.18"
+              opacity="0.22"
               filter="url(#spaceverse-glow)"
             />
-
             <circle
-              cx="0"
-              cy="0"
               r="15"
               fill="url(#spaceverse-sun)"
               filter="url(#spaceverse-glow)"
             />
-
             <text
-              x="0"
               y="35"
               textAnchor="middle"
               fontSize="10"
@@ -315,28 +302,28 @@ export default function OrbitView({
             <div className="flex flex-wrap items-center justify-center gap-2">
               <button
                 type="button"
-                className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-bold text-white hover:bg-indigo-500"
-                onClick={() => setPlaying((value) => !value)}
+                className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-bold text-white"
+                onClick={() => setPlaying((v) => !v)}
               >
                 {playing ? 'Pause' : 'Play'}
               </button>
 
               <button
                 type="button"
-                className="rounded-full border border-slate-600 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-                onClick={() => setZoom((value) => Math.max(0.65, value - 0.15))}
+                className="rounded-full border border-slate-600 px-3 py-2 text-sm text-white"
+                onClick={() => setZoom((v) => Math.max(0.65, v - 0.15))}
               >
                 Zoom −
               </button>
 
-              <span className="min-w-12 text-center text-sm font-semibold text-white">
+              <span className="text-sm font-semibold text-white">
                 {zoom.toFixed(2)}×
               </span>
 
               <button
                 type="button"
-                className="rounded-full border border-slate-600 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-                onClick={() => setZoom((value) => Math.min(1.4, value + 0.15))}
+                className="rounded-full border border-slate-600 px-3 py-2 text-sm text-white"
+                onClick={() => setZoom((v) => Math.min(1.4, v + 0.15))}
               >
                 Zoom +
               </button>
@@ -344,15 +331,15 @@ export default function OrbitView({
               <button
                 type="button"
                 aria-pressed={showLabels}
-                className="rounded-full border border-cyan-400/60 px-3 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-900/40"
-                onClick={() => setShowLabels((value) => !value)}
+                className="rounded-full border border-cyan-400/60 px-3 py-2 text-sm text-cyan-100"
+                onClick={() => setShowLabels((v) => !v)}
               >
                 {showLabels ? 'Hide Labels' : 'Show Labels'}
               </button>
 
               <button
                 type="button"
-                className="rounded-full border border-slate-600 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                className="rounded-full border border-slate-600 px-3 py-2 text-sm text-white"
                 onClick={() => {
                   setZoom(1);
                   setSpeed(1);
@@ -371,7 +358,6 @@ export default function OrbitView({
                 <label htmlFor="orbit-speed">Orbit speed</label>
                 <span>{speed.toFixed(1)}×</span>
               </div>
-
               <input
                 id="orbit-speed"
                 type="range"
@@ -385,9 +371,8 @@ export default function OrbitView({
             </div>
 
             <p className="text-center text-xs leading-relaxed text-slate-300">
-              Tap a planet to select it. Uranus and Neptune labels are
-              available using the Show/Hide Labels control.
-              Planet positions and speeds are simplified for learning.
+              Tap a planet to select it. Orbital distances and speeds are
+              simplified for learning and are not to scale.
             </p>
           </div>
         )}
