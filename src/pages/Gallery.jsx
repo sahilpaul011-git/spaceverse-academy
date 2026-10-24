@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchImages } from '../lib/nasa';
@@ -17,7 +18,7 @@ export default function Gallery() {
 
   const [query, setQuery] = useState(initialQuery);
   const [page, setPage] = useState(1);
-const [retry, setRetry] = useState(0);
+  const [retry, setRetry] = useState(0);
   const [result, setResult] = useState({
     status: 'loading',
     items: [],
@@ -49,7 +50,7 @@ const [retry, setRetry] = useState(0);
       });
 
     return () => controller.abort();
-  }, [query, page]);
+  }, [query, page, retry]);
 
   function submitSearch(event) {
     event.preventDefault();
@@ -68,10 +69,7 @@ const [retry, setRetry] = useState(0);
     setParams({ q: value });
   }
 
-  const pageCount = Math.max(
-    1,
-    Math.ceil(result.total / 12)
-  );
+  const pageCount = Math.max(1, Math.ceil(result.total / 12));
 
   return (
     <div className="space-y-5">
@@ -142,13 +140,14 @@ const [retry, setRetry] = useState(0);
             </h2>
             <p className="mt-2 text-slate-300">{result.message}</p>
             <button
+              type="button"
               className="btn-primary mt-3"
-              onClick={() => setPage((current) => current)}
+              onClick={() => setRetry((current) => current + 1)}
             >
               Try again
             </button>
             <p className="mt-2 text-xs text-slate-400">
-              Check your internet connection and try searching again.
+              Check your internet connection and try again.
             </p>
           </div>
         )}
@@ -156,9 +155,7 @@ const [retry, setRetry] = useState(0);
         {result.status === 'success' && (
           <>
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-xl font-extrabold">
-                Search results
-              </h2>
+              <h2 className="text-xl font-extrabold">Search results</h2>
               <p className="text-sm text-slate-300">
                 {result.total.toLocaleString()} results found
               </p>
@@ -218,6 +215,7 @@ const [retry, setRetry] = useState(0);
             {result.total > 12 && (
               <div className="mt-5 flex items-center justify-center gap-4">
                 <button
+                  type="button"
                   className="btn-ghost"
                   disabled={page <= 1}
                   onClick={() => setPage((current) => current - 1)}
@@ -230,6 +228,7 @@ const [retry, setRetry] = useState(0);
                 </span>
 
                 <button
+                  type="button"
                   className="btn-ghost"
                   disabled={page >= pageCount}
                   onClick={() => setPage((current) => current + 1)}
@@ -248,4 +247,4 @@ const [retry, setRetry] = useState(0);
       </p>
     </div>
   );
-          }
+}
