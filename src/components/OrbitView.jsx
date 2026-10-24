@@ -87,7 +87,27 @@ export default function OrbitView({
         className="mx-auto aspect-square w-full max-w-[640px] touch-manipulation"
         role="group"
         aria-label="Solar System orbit diagram, not to scale. Tab through the planets or use the planet buttons."
-      >
+      > <defs>
+  {bodies.map((b) => (
+    <radialGradient
+      key={`${b.id}-surface`}
+      id={`planet-${b.id}`}
+      cx="30%"
+      cy="25%"
+      r="75%"
+    >
+      <stop offset="0%" stopColor="#ffffff" stopOpacity=".95" />
+      <stop offset="18%" stopColor={b.color} />
+      <stop offset="72%" stopColor={b.color} />
+      <stop offset="100%" stopColor="#020617" stopOpacity=".95" />
+    </radialGradient>
+  ))}
+  <radialGradient id="sun-glow">
+    <stop offset="0%" stopColor="#fff7c2" />
+    <stop offset="55%" stopColor="#fbbf24" />
+    <stop offset="100%" stopColor="#ea580c" />
+  </radialGradient>
+</defs>
         {bodies.map((b) => (
           <circle
             key={`${b.id}-orbit`}
