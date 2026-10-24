@@ -17,6 +17,7 @@ export default function Gallery() {
 
   const [query, setQuery] = useState(initialQuery);
   const [page, setPage] = useState(1);
+const [retry, setRetry] = useState(0);
   const [result, setResult] = useState({
     status: 'loading',
     items: [],
