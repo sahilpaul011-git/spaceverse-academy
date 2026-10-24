@@ -77,7 +77,45 @@ export default function Home() {
         </ul>
       </section>
 
-      <section aria-labelledby="next">
+      
+<section
+  aria-labelledby="quiz-arena"
+  className="mx-auto my-10 max-w-6xl px-4"
+>
+  <div className="overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-950 via-indigo-800 to-purple-800 p-6 text-white shadow-xl sm:p-10">
+    <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+      <div className="max-w-xl">
+        <p className="mb-3 text-sm font-bold uppercase tracking-widest text-cyan-300">
+          🚀 Daily space challenge
+        </p>
+
+        <h2
+          id="quiz-arena"
+          className="text-3xl font-extrabold sm:text-4xl"
+        >
+          Enter Quiz Arena!
+        </h2>
+
+        <p className="mt-3 leading-7 text-indigo-100">
+          Test your space knowledge with five questions, discover
+          amazing facts, and challenge yourself every day.
+        </p>
+
+        <p className="mt-3 text-sm text-indigo-200">
+          Free to play • Kids-friendly • Learn while having fun
+        </p>
+      </div>
+
+      <Link
+        to="/quiz"
+        className="inline-flex shrink-0 items-center justify-center rounded-full bg-yellow-300 px-6 py-3 font-extrabold text-indigo-950 transition hover:bg-yellow-200"
+      >
+        Play Quiz Now →
+      </Link>
+    </div>
+  </div>
+</section>
+      
         <h2 id="next" className="mb-1 text-2xl font-extrabold">
           Coming next
         </h2>
