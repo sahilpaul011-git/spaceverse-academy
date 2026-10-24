@@ -228,3 +228,120 @@ body {
   }
 }
 
+/* SpaceVerse cinematic navigation */
+.sv-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid #ffffff12;
+  background: rgba(5, 7, 17, .88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.sv-nav-inner {
+  display: flex;
+  width: min(100% - 2rem, 1400px);
+  min-height: 76px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin: 0 auto;
+}
+
+.sv-nav-brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .6rem;
+  color: #f8fafc !important;
+  font-size: .78rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  line-height: 1.5;
+}
+
+.sv-nav-symbol {
+  color: #a5f3fc;
+  font-size: 2rem;
+}
+
+.sv-nav-brand small {
+  display: block;
+  color: #8b9ab5;
+  font-size: .58rem;
+  font-weight: 600;
+  letter-spacing: .25em;
+}
+
+.sv-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .25rem;
+  flex-wrap: wrap;
+}
+
+.sv-nav-link {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: .55rem .75rem;
+  color: #aeb9cd !important;
+  font-size: .75rem;
+  font-weight: 650;
+  transition: color .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.sv-nav-link:hover {
+  color: white !important;
+  background: #ffffff0a;
+}
+
+.sv-nav-link.is-active {
+  border-color: #67e8f92c;
+  background: #67e8f912;
+  color: #a5f3fc !important;
+}
+
+@media (max-width: 900px) {
+  .sv-nav-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .5rem;
+    padding: .75rem 0;
+  }
+
+  .sv-nav-links {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: .3rem;
+  }
+
+  .sv-nav-link {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .sv-nav-inner {
+    width: calc(100% - 1.25rem);
+  }
+
+  .sv-nav-brand {
+    font-size: .72rem;
+  }
+
+  .sv-nav-link {
+    min-height: 36px;
+    padding: .5rem .7rem;
+    font-size: .7rem;
+  }
+}
+
+
