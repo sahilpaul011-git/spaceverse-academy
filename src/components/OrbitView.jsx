@@ -230,7 +230,7 @@ export default function OrbitView({
                 />
               )}
 
-              {!compact && (active || zoom > 1.5 || b.r < 200) && (
+              {!compact && showLabels && (
                 <text
                   x={x}
                   y={y - b.size - 7}
@@ -293,6 +293,13 @@ export default function OrbitView({
                 onSelect?.(null);
               }}
             >
+<button
+  className="btn-ghost"
+  onClick={() => setShowLabels((value) => !value)}
+  aria-pressed={showLabels}
+>
+  {showLabels ? 'Hide labels' : 'Show labels'}
+</button>
               Reset
             </button>
           </div>
