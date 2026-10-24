@@ -30,6 +30,7 @@ export default function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/credits" element={<Credits />} />
           <Route path="/quiz" element={<Quiz />} />
+<Route path="/cosmic-lab" element={<CosmicLab />} />
           <Route
             path="*"
             element={
