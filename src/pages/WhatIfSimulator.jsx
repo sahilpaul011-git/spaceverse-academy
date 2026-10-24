@@ -2,23 +2,25 @@
 import { useEffect, useState } from 'react';
 import PlanetArt from '../components/PlanetArt';
 
-const STORAGE_KEY = 'spaceverse-what-if-v1';
+const STORAGE_KEY = 'spaceverse-what-if-v2';
 
 const EXPERIMENTS = [
   {
     id: 'moons',
-    emoji: '🌍',
+    emoji: '🌙',
     title: 'What if Earth had two moons?',
-    short: 'A second moon in our sky',
+    subtitle: 'A second moon in our sky',
+    planet: 'earth',
+    color: 'cyan',
     description:
-      'Imagine a second moon sharing Earth’s sky. Depending on its mass and orbit, it could change tides and create spectacular nights.',
-    fact:
-      'REAL SCIENCE: The Moon raises tides through gravity. A second moon would have different effects depending on its mass, distance and orbit.',
+      'Imagine two moons circling Earth. Their gravity could change ocean tides, and their different orbital positions could create spectacular night skies.',
+    science:
+      'Our Moon creates much of Earth’s tidal variation, while the Sun also affects tides. A second moon’s effects would depend on its mass, distance and orbit.',
     result:
-      'Two moons could appear in the same sky. Their phases and positions would change over time.',
-    question: 'What mainly causes ocean tides on Earth?',
+      'Two moons would move through the sky at different speeds, showing different phases and positions.',
+    question: 'What mainly causes ocean tides?',
     answers: [
-      'The Moon’s gravity and the Sun’s gravity',
+      'The gravity of the Moon and Sun',
       'The colour of the ocean',
       'Clouds pushing the sea',
     ],
@@ -26,39 +28,43 @@ const EXPERIMENTS = [
   },
   {
     id: 'oceans',
-    emoji: '🔴',
+    emoji: '🌊',
     title: 'What if Mars had oceans?',
-    short: 'A blue world beyond Earth',
+    subtitle: 'A blue world beyond Earth',
+    planet: 'mars',
+    color: 'orange',
     description:
-      'Imagine huge oceans covering parts of Mars. The red deserts might become coastlines, but the planet would still have a thin atmosphere and harsh conditions.',
-    fact:
-      'REAL SCIENCE: Mars has evidence of ancient rivers and lakes. Stable Earth-like oceans today would require major changes to its environment.',
+      'Imagine ancient Mars with vast oceans. Coastlines might surround its giant volcanoes, but its thin atmosphere and cold climate would still make it a difficult place to live.',
+    science:
+      'Scientists have found evidence that liquid water once flowed on Mars. Stable oceans today would require major changes to the planet’s climate and atmospheric pressure.',
     result:
-      'This experiment imagines oceans on Mars. The planet’s real surface remains cold, dusty and hostile to liquid water.',
-    question: 'What is a major challenge for liquid water on Mars today?',
+      'This is a thought experiment, not a realistic prediction of Mars today. The blue effects represent hypothetical water.',
+    question: 'Why is stable liquid water difficult on Mars today?',
     answers: [
       'Mars has no mountains',
-      'Its low atmospheric pressure and cold climate',
-      'Mars receives no sunlight at all',
+      'Its cold climate and low atmospheric pressure',
+      'Mars never receives sunlight',
     ],
     correct: 1,
   },
   {
     id: 'gravity',
-    emoji: '🪐',
+    emoji: '🧲',
     title: 'What if gravity changed?',
-    short: 'Feel a different world',
+    subtitle: 'Explore another gravity level',
+    planet: 'earth',
+    color: 'purple',
     description:
-      'Adjust gravity to imagine a world where it is weaker or stronger than Earth’s. Your mass stays the same, but your weight changes.',
-    fact:
-      'REAL SCIENCE: Weight depends on gravity. Mass is the amount of matter in your body and does not change just because gravity changes.',
+      'Turn the gravity dial up or down. Explore how your weight would change on a world with different surface gravity.',
+    science:
+      'Mass measures how much matter you have. Weight depends on gravity. The slider models your weight on a hypothetical world.',
     result:
-      'At lower gravity, you would weigh less. At higher gravity, you would weigh more. This slider is an educational model.',
-    question: 'If gravity becomes weaker, what happens to your weight?',
+      'Lower gravity means less weight. Higher gravity means more weight. Your mass stays the same.',
+    question: 'What happens to your weight when gravity decreases?',
     answers: [
       'It decreases',
-      'It doubles every second',
-      'It never changes',
+      'It becomes zero in every situation',
+      'Your mass disappears',
     ],
     correct: 0,
   },
@@ -66,111 +72,134 @@ const EXPERIMENTS = [
 
 function readProgress() {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     return {
-      xp: Number(saved.xp) || 0,
-      completed: Array.isArray(saved.completed) ? saved.completed : [],
+      xp: Number(data.xp) || 0,
+      completed: Array.isArray(data.completed) ? data.completed : [],
     };
   } catch {
     return { xp: 0, completed: [] };
   }
 }
 
+function Starfield() {
+  return (
+    <div
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden="true"
+    >
+      {Array.from({ length: 75 }, (_, i) => (
+        <span
+          key={i}
+          className="absolute rounded-full bg-white"
+          style={{
+            left: `${(i * 47 + 13) % 100}%`,
+            top: `${(i * 31 + 7) % 100}%`,
+            width: i % 7 === 0 ? 3 : 2,
+            height: i % 7 === 0 ? 3 : 2,
+            opacity: 0.25 + (i % 5) * 0.12,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function PlanetScene({ experiment, gravity }) {
   const isEarth = experiment.id === 'moons';
   const isMars = experiment.id === 'oceans';
-  const isGravity = experiment.id === 'gravity';
+  const planetId = isMars ? 'mars' : 'earth';
 
   return (
     <div
-      className={`relative isolate flex h-[340px] items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 ${
-        isEarth
-          ? 'bg-gradient-to-b from-indigo-950 via-blue-950 to-slate-950'
-          : isMars
-          ? 'bg-gradient-to-b from-orange-950 via-red-950 to-slate-950'
-          : 'bg-gradient-to-b from-purple-950 via-indigo-950 to-slate-950'
+      className={`relative isolate min-h-[340px] overflow-hidden rounded-[2rem] border border-white/10 ${
+        isMars
+          ? 'bg-gradient-to-br from-[#200b12] via-[#32121a] to-[#070b18]'
+          : isEarth
+          ? 'bg-gradient-to-br from-[#050b25] via-[#091a3d] to-[#020617]'
+          : 'bg-gradient-to-br from-[#10072b] via-[#101640] to-[#020617]'
       }`}
     >
-      <div className="pointer-events-none absolute inset-0">
-        {Array.from({ length: 65 }, (_, i) => (
-          <span
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              left: `${(i * 37 + 11) % 97}%`,
-              top: `${(i * 23 + 7) % 93}%`,
-              width: i % 5 === 0 ? 3 : 2,
-              height: i % 5 === 0 ? 3 : 2,
-              opacity: 0.25 + (i % 6) * 0.1,
-            }}
-          />
-        ))}
+      <Starfield />
+
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        style={{
+          background: isMars
+            ? 'rgba(249,115,22,0.12)'
+            : 'rgba(59,130,246,0.15)',
+        }}
+      />
+
+      <div className="absolute left-4 top-4 z-20 rounded-full border border-white/15 bg-black/40 px-3 py-2 text-xs font-bold tracking-wide text-white backdrop-blur">
+        {isEarth
+          ? '🌙 TWO-MOON EXPERIMENT'
+          : isMars
+          ? '🌊 MARS OCEAN EXPERIMENT'
+          : '🧲 GRAVITY EXPERIMENT'}
       </div>
 
       {isEarth && (
         <>
-          <div className="absolute left-[12%] top-[17%] h-9 w-9 rounded-full border border-white/30 bg-gradient-to-br from-gray-100 to-gray-500 shadow-[0_0_25px_#ffffff55]" />
-          <div className="absolute right-[12%] top-[24%] h-14 w-14 rounded-full border border-white/30 bg-gradient-to-br from-gray-100 to-gray-500 shadow-[0_0_30px_#ffffff55]" />
-          <p className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-2 text-xs font-bold text-white">
-            TWO-MOON SCENARIO
-          </p>
+          <div className="absolute left-[13%] top-[24%] h-8 w-8 rounded-full bg-gradient-to-br from-gray-100 to-gray-500 shadow-[0_0_22px_#ffffff55]" />
+          <div className="absolute right-[12%] top-[34%] h-12 w-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-500 shadow-[0_0_30px_#ffffff66]" />
         </>
       )}
 
       {isMars && (
-        <>
-          <div className="absolute bottom-[8%] left-[-8%] h-20 w-[55%] rounded-[50%] bg-gradient-to-t from-orange-950 to-orange-700/80" />
-          <div className="absolute bottom-[13%] right-[-10%] h-28 w-[60%] rounded-[50%] bg-gradient-to-t from-red-950 to-orange-800/80" />
-          <div className="absolute bottom-[18%] left-[15%] h-16 w-[70%] rounded-[50%] border-t-4 border-cyan-200/80 bg-gradient-to-b from-cyan-400 to-blue-800 shadow-[0_0_30px_#22d3ee66]" />
-          <p className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-2 text-xs font-bold text-white">
-            HYPOTHETICAL OCEANS
-          </p>
-        </>
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-orange-950/50 to-transparent" />
       )}
 
-      {!isGravity ? (
-        <div className="relative z-10 flex h-56 w-56 items-center justify-center">
+      <div className="relative z-10 flex min-h-[340px] items-center justify-center px-3 pb-12 pt-12">
+        <div
+          className="relative flex items-center justify-center"
+          style={{
+            width: 'min(70vw, 270px)',
+            height: 'min(70vw, 270px)',
+            maxWidth: 270,
+            maxHeight: 270,
+            transform: `scale(${experiment.id === 'gravity' ? 0.9 + gravity / 1000 : 1})`,
+            transition: 'transform 300ms ease',
+          }}
+        >
+          {experiment.id === 'gravity' && (
+            <>
+              <div
+                className="pointer-events-none absolute rounded-full border border-violet-300/20"
+                style={{
+                  width: `${100 + gravity * 0.55}%`,
+                  height: `${100 + gravity * 0.55}%`,
+                  transition: 'all 300ms ease',
+                }}
+              />
+              <div className="pointer-events-none absolute h-[115%] w-[115%] rounded-full border border-violet-300/15" />
+              <div className="pointer-events-none absolute h-[130%] w-[130%] rounded-full border border-violet-300/10" />
+            </>
+          )}
+
           <PlanetArt
+            key={planetId}
             body={{
-              id: isEarth ? 'earth' : 'mars',
-              name: isEarth ? 'Earth' : 'Mars',
+              id: planetId,
+              name: isMars ? 'Mars' : 'Earth',
             }}
-            className="h-56 w-56"
+            className="h-full w-full"
           />
         </div>
-      ) : (
-        <div className="relative z-10 flex h-48 w-48 items-center justify-center">
-          <div
-            className="absolute rounded-full border border-violet-300/20 transition-all duration-300"
-            style={{
-              width: `${80 + gravity * 0.45}%`,
-              height: `${80 + gravity * 0.45}%`,
-            }}
-          />
-          <div className="absolute h-36 w-36 rounded-full border border-violet-300/30" />
-          <div className="absolute h-24 w-24 rounded-full border border-violet-300/40" />
-          <div
-            className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-300 to-indigo-950 text-3xl shadow-[0_0_35px_#a78bfa77] transition-transform duration-300"
-            style={{ transform: `scale(${0.65 + gravity / 180})` }}
-          >
-            🧑‍🚀
-          </div>
-          <p className="absolute bottom-[-18px] text-xs font-bold text-violet-200">
-            GRAVITY FIELD · {gravity}%
-          </p>
-        </div>
-      )}
+      </div>
 
-      <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between gap-2">
-        <span className="rounded-full border border-white/15 bg-black/50 px-3 py-2 text-xs font-bold text-white backdrop-blur">
+      <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2">
+        <span className="rounded-full border border-white/15 bg-black/40 px-3 py-2 text-xs font-bold text-white backdrop-blur">
           {isEarth
-            ? '🌙 TWO-MOON SCENARIO'
+            ? '🌍 EARTH + 2 MOONS'
             : isMars
-            ? '🌊 HYPOTHETICAL OCEANS'
-            : '🧲 GRAVITY LAB'}
+            ? '🔴 HYPOTHETICAL MARS'
+            : '🌎 EARTH GRAVITY MODEL'}
         </span>
-        <span className="text-xs text-white/70">
-          {isGravity ? 'Interactive gravity model' : 'Textured 3D planet'}
+        <span className="text-xs text-slate-300">
+          {experiment.id === 'gravity'
+            ? `${gravity}% Earth gravity`
+            : 'Live 3D planet'}
         </span>
       </div>
     </div>
@@ -187,13 +216,13 @@ export default function WhatIfSimulator() {
     EXPERIMENTS.find((item) => item.id === activeId) || EXPERIMENTS[0];
 
   const completed = progress.completed.includes(activeId);
-  const gravityWeight = (60 * gravity / 100).toFixed(1);
+  const weight = (60 * gravity / 100).toFixed(1);
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     } catch {
-      // The simulator remains usable without browser storage.
+      // Continue to work if browser storage is unavailable.
     }
   }, [progress]);
 
@@ -204,37 +233,46 @@ export default function WhatIfSimulator() {
 
   function submitAnswer(index) {
     if (answer !== null) return;
+
     setAnswer(index);
 
     if (index === experiment.correct && !completed) {
-      setProgress((old) => ({
-        xp: old.xp + 25,
-        completed: [...old.completed, activeId],
+      setProgress((previous) => ({
+        xp: previous.xp + 25,
+        completed: [...previous.completed, activeId],
       }));
     }
   }
 
   function nextExperiment() {
-    const index = EXPERIMENTS.findIndex((item) => item.id === activeId);
-    chooseExperiment(EXPERIMENTS[(index + 1) % EXPERIMENTS.length].id);
+    const currentIndex = EXPERIMENTS.findIndex(
+      (item) => item.id === activeId
+    );
+    chooseExperiment(
+      EXPERIMENTS[(currentIndex + 1) % EXPERIMENTS.length].id
+    );
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <section className="relative mb-8 overflow-hidden rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-indigo-950 via-slate-950 to-purple-950 p-6 sm:p-10">
-        <div className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-purple-500/20 blur-3xl" />
+    <main className="mx-auto max-w-7xl px-4 py-8 text-white sm:px-6">
+      <header className="relative mb-8 overflow-hidden rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-indigo-950 via-slate-950 to-purple-950 p-6 sm:p-10">
+        <Starfield />
 
-        <div className="relative z-10 max-w-3xl">
+        <div className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
+
+        <div className="relative z-10">
           <span className="inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1 text-xs font-black tracking-[0.2em] text-cyan-200">
-            SPACEVERSE EXPERIMENT ZONE
+            SPACEVERSE • INTERACTIVE LAB
           </span>
-          <h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-6xl">
+
+          <h1 className="mt-4 text-4xl font-black leading-tight sm:text-6xl">
             What If<span className="text-cyan-300">?</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-            Change the rules of the cosmos. Explore strange worlds, run thought
-            experiments, and discover the science behind impossible questions.
+
+          <p className="mt-4 max-w-2xl leading-7 text-slate-300 sm:text-lg">
+            Change the rules of the cosmos. Explore 3D planets, test
+            gravity, and discover the science behind extraordinary
+            possibilities.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -244,20 +282,22 @@ export default function WhatIfSimulator() {
                 ⭐ {progress.xp}
               </p>
             </div>
+
             <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
               <p className="text-xs text-slate-400">EXPERIMENTS CLEARED</p>
               <p className="text-2xl font-black text-cyan-200">
-                {progress.completed.length}/3
+                {progress.completed.length}/{EXPERIMENTS.length}
               </p>
             </div>
           </div>
         </div>
-      </section>
+      </header>
 
       <section className="mb-8">
-        <h2 className="mb-3 text-xl font-extrabold text-white">
+        <h2 className="mb-3 text-xl font-extrabold">
           Choose your experiment
         </h2>
+
         <div className="grid gap-3 sm:grid-cols-3">
           {EXPERIMENTS.map((item) => (
             <button
@@ -273,11 +313,11 @@ export default function WhatIfSimulator() {
               <span className="text-3xl" aria-hidden="true">
                 {item.emoji}
               </span>
-              <span className="mt-2 block font-extrabold text-white">
+              <span className="mt-2 block font-extrabold">
                 {item.title}
               </span>
               <span className="mt-1 block text-sm text-slate-400">
-                {item.short}
+                {item.subtitle}
               </span>
             </button>
           ))}
@@ -289,12 +329,12 @@ export default function WhatIfSimulator() {
           <PlanetScene experiment={experiment} gravity={gravity} />
 
           {activeId === 'gravity' && (
-            <div className="mt-4 rounded-2xl border border-purple-300/20 bg-purple-950/40 p-5">
+            <div className="mt-4 rounded-2xl border border-violet-300/20 bg-violet-950/40 p-5">
               <div className="flex items-center justify-between gap-3">
-                <label htmlFor="gravity-slider" className="font-bold text-white">
+                <label htmlFor="gravity-slider" className="font-bold">
                   Gravity strength
                 </label>
-                <span className="rounded-full bg-purple-300/10 px-3 py-1 font-black text-purple-200">
+                <span className="rounded-full bg-violet-300/10 px-3 py-1 font-black text-violet-200">
                   {gravity}%
                 </span>
               </div>
@@ -321,11 +361,11 @@ export default function WhatIfSimulator() {
                   If your Earth weight is 60 kg-equivalent:
                 </p>
                 <p className="mt-1 text-2xl font-black text-fuchsia-200">
-                  {gravityWeight} kg-equivalent
+                  {weight} kg-equivalent
                 </p>
                 <p className="mt-2 text-xs leading-5 text-slate-400">
-                  This is a simplified comparison. Your mass remains the same
-                  while your weight changes with gravity.
+                  This is a simplified model. Your mass remains the
+                  same, while your weight changes with gravity.
                 </p>
               </div>
             </div>
@@ -333,13 +373,15 @@ export default function WhatIfSimulator() {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 sm:p-6">
+          <article className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 sm:p-6">
             <p className="text-sm font-bold uppercase tracking-widest text-cyan-300">
               Mission briefing
             </p>
-            <h2 className="mt-3 text-2xl font-black text-white">
+
+            <h2 className="mt-3 text-2xl font-black">
               {experiment.title}
             </h2>
+
             <p className="mt-3 leading-7 text-slate-300">
               {experiment.description}
             </p>
@@ -358,34 +400,38 @@ export default function WhatIfSimulator() {
                 🧠 Real science check
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-300">
-                {experiment.fact}
+                {experiment.science}
               </p>
             </div>
 
             {completed && (
               <p className="mt-4 text-sm font-bold text-emerald-300">
-                ✓ Experiment quiz completed — XP earned!
+                ✓ Experiment completed — XP earned!
               </p>
             )}
-          </div>
+          </article>
 
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 sm:p-6">
+          <article className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 sm:p-6">
             <p className="text-sm font-bold uppercase tracking-widest text-purple-300">
               Quick science quiz
             </p>
-            <h3 className="mt-3 text-lg font-extrabold text-white">
+
+            <h3 className="mt-3 text-lg font-extrabold">
               {experiment.question}
             </h3>
 
             <div className="mt-4 space-y-2">
               {experiment.answers.map((option, index) => {
-                const correct = index === experiment.correct;
-                const chosen = answer === index;
-                let style = 'border-white/10 bg-white/5 hover:bg-white/10';
+                const isCorrect = index === experiment.correct;
+                const isChosen = answer === index;
 
-                if (answer !== null && correct) {
-                  style = 'border-emerald-400/60 bg-emerald-400/10';
-                } else if (chosen && !correct) {
+                let style =
+                  'border-white/10 bg-white/5 hover:bg-white/10';
+
+                if (answer !== null && isCorrect) {
+                  style =
+                    'border-emerald-400/60 bg-emerald-400/10';
+                } else if (isChosen && !isCorrect) {
                   style = 'border-red-400/60 bg-red-400/10';
                 }
 
@@ -419,6 +465,7 @@ export default function WhatIfSimulator() {
                     ? '🚀 Correct!'
                     : '🛰️ Not quite — keep learning!'}
                 </p>
+
                 <p className="mt-1">
                   {answer === experiment.correct
                     ? completed
@@ -426,6 +473,7 @@ export default function WhatIfSimulator() {
                       : 'Great discovery, Space Explorer. You earned 25 XP!'
                     : `Correct answer: ${experiment.answers[experiment.correct]}.`}
                 </p>
+
                 <button
                   type="button"
                   onClick={nextExperiment}
@@ -435,14 +483,14 @@ export default function WhatIfSimulator() {
                 </button>
               </div>
             )}
-          </div>
+          </article>
         </div>
       </section>
 
-      <p className="mt-8 text-center text-xs leading-6 text-slate-500">
-        SpaceVerse Academy • Explore boldly, ask questions, and test your ideas.
-        Progress is saved in this browser.
-      </p>
-    </div>
+      <footer className="mt-8 text-center text-xs leading-6 text-slate-500">
+        SpaceVerse Academy • Explore boldly, ask questions, and test
+        your ideas. Your progress is saved in this browser.
+      </footer>
+    </main>
   );
 }
