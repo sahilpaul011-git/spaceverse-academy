@@ -114,7 +114,7 @@ export default function Home() {
       </Link>
     </div>
   </div>
-</section>
+
       
         <h2 id="next" className="mb-1 text-2xl font-extrabold">
           Coming next
