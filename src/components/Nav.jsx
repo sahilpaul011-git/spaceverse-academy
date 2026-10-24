@@ -5,8 +5,9 @@ const links = [
   ['/', 'Home'],
   ['/explore', 'Solar System'],
   ['/quiz', 'Quiz Arena'],
-  ['/missions', '🚀 Missions'],
-  ['/cosmic-lab', '🔭 Cosmic Lab'],
+  ['/missions', 'Missions'],
+  ['/cosmic-lab', 'Cosmic Lab'],
+  ['/what-if', 'What If?'],
   ['/gallery', 'Space Gallery'],
   ['/credits', 'Credits & About'],
 ];
