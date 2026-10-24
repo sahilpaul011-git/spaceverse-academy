@@ -184,7 +184,7 @@ export default function OrbitView({
                     role="button"
                     tabIndex={0}
                     aria-label={`Select ${getPlanetName(planet)}`}
-                    onClick={() => onSelect?.(planet)}
+                    onClick={() => onSelect?.(planet.id)}
                     onKeyDown={(event) => {
                       if (
                         event.key === 'Enter' ||
