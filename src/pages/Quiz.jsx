@@ -156,7 +156,22 @@ export default function Quiz() {
     setSelected(null);
     setFinished(false);
   }
+function retryMistakes() {
+  const missedQuestions = answers
+    .filter((answer) => !answer.correct)
+    .map((answer) => answer.question)
+    .filter(Boolean);
 
+  if (missedQuestions.length === 0) return;
+
+  setQuestions(missedQuestions);
+  setSource('mistake practice');
+  setIndex(0);
+  setAnswers([]);
+  setSelected(null);
+  setFinished(false);
+      }
+  
   if (loading) {
     return <section className="card text-center"><p className="text-xl font-bold">🚀 Preparing your space challenge…</p></section>;
   }
