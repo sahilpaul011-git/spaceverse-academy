@@ -1143,4 +1143,141 @@ h4 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}/* SpaceVerse planet details popup */
+
+.planet-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+  background: rgba(2, 4, 15, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.planet-modal-panel {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 820px;
+  max-height: calc(100dvh - 32px);
+  padding: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: #f8fafc;
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(99, 102, 241, 0.2), transparent 42%),
+    #090d1c;
+  box-shadow: 0 25px 100px #000b;
+}
+
+.planet-modal-close {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  color: white;
+  background: #1b2238;
+  cursor: pointer;
+}
+
+.planet-modal-close:hover {
+  background: #343d5b;
+}
+
+.planet-modal-hero {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding-right: 28px;
+}
+
+.planet-modal-art {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+}
+
+.planet-modal-art img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.planet-modal-stars {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: #c4b5fd;
+  opacity: 0.4;
+}
+
+.planet-modal-stars span {
+  position: absolute;
+}
+
+.planet-modal-stars span:nth-child(1) {
+  top: 15%;
+  right: 12%;
+}
+
+.planet-modal-stars span:nth-child(2) {
+  top: 35%;
+  right: 5%;
+}
+
+.planet-modal-stars span:nth-child(3) {
+  top: 8%;
+  left: 50%;
+}
+
+.planet-modal-stars span:nth-child(4) {
+  bottom: 20%;
+  left: 5%;
+}
+
+.planet-modal-stars span:nth-child(5) {
+  bottom: 8%;
+  right: 20%;
+}
+
+@media (max-width: 560px) {
+  .planet-modal-backdrop {
+    padding: 8px;
+  }
+
+  .planet-modal-panel {
+    max-height: calc(100dvh - 16px);
+    padding: 18px;
+    border-radius: 17px;
+  }
+
+  .planet-modal-hero {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 28px;
+    padding-right: 0;
+  }
+
+  .planet-modal-art {
+    align-self: center;
+  }
+
+  .planet-modal-panel .grid {
+    gap: 8px;
+  }
 }
