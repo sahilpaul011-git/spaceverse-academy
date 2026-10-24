@@ -10,6 +10,7 @@ import Credits from './pages/Credits';
 import Quiz from './pages/Quiz';
 import MissionControl from './pages/MissionControl';
 import CosmicLab from './pages/CosmicLab';
+import WhatIfSimulator from './pages/WhatIfSimulator';
 export default function App() {
   const location = useLocation();
 
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/credits" element={<Credits />} />
           <Route path="/quiz" element={<Quiz />} />
 <Route path="/cosmic-lab" element={<CosmicLab />} />
+<Route path="/what-if" element={<WhatIfSimulator />} />
           <Route
             path="*"
             element={
