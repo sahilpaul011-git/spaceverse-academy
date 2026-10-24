@@ -242,7 +242,17 @@ function retryMistakes() {
           <h2 className="mt-3 text-3xl font-extrabold">{score >= 4 ? 'Space superstar!' : score >= 2 ? 'Great mission!' : 'Keep exploring!'}</h2>
           <p className="mt-2 text-lg">You scored <strong>{score} out of {questions.length}</strong>.</p>
           <p className="mt-2 text-slate-300">{score === 5 ? 'Perfect score! You are ready for another galaxy.' : 'Every question teaches you something new. Keep learning!'}</p>
-          <button className="btn-primary mt-5" onClick={restart}>Play practice round again</button>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+  {answers.some((answer) => !answer.correct && answer.question) && (
+    <button className="btn-primary" onClick={retryMistakes}>
+      🔁 Retry my mistakes
+    </button>
+  )}
+
+  <button className="btn-primary" onClick={restart}>
+    🚀 Practice with new questions
+  </button>
+</div>
         </section>
       )}
 
