@@ -1,0 +1,162 @@
+
+ // Curated planet facts, kept separate from UI code.
+// Hand-compiled from NASA's public fact sheets. Review before launch.
+
+export const DATA_META = {
+  compiledOn: '2026-10-24',
+  status: 'Compiled by hand. Needs independent review before public launch.',
+  sources: [
+    { label: 'NASA Solar System Exploration', url: 'https://science.nasa.gov/solar-system/' },
+    { label: 'NASA Planetary Fact Sheets', url: 'https://nssdc.gsfc.nasa.gov/planetary/factsheet/' },
+    { label: 'IAU Pluto information', url: 'https://www.iau.org/public/themes/pluto/' },
+  ],
+  moonsNote: 'Moon counts change as new moons are confirmed.',
+  moonsUrl: 'https://science.nasa.gov/solar-system/moons/',
+};
+
+export const SUN = {
+  id: 'sun',
+  name: 'Sun',
+  type: 'Star (G-type main-sequence)',
+  color: '#fbbf24',
+  diameterKm: 1392700,
+  distance: 'Centre of the Solar System',
+  day: 'About 25 Earth days to spin once at its equator',
+  year: 'About 230 million years to orbit the centre of the Milky Way',
+  atmosphere: 'Hot hydrogen and helium gas',
+  temperature: 'Surface about 5,500 °C; core about 15 million °C',
+  moons: 'None',
+  kid: 'The Sun is a star, a giant ball of hot glowing gas. It gives Earth light and warmth, and over a million Earths could fit inside it.',
+  discovery: 'Humans have watched the Sun forever. Never look straight at it, even through sunglasses.',
+  nasaQuery: 'Sun solar dynamics observatory',
+};
+
+export const PLANETS = [
+  {
+    id: 'mercury', name: 'Mercury', type: 'Rocky planet',
+    color: '#9ca3af', size: 4, yearDays: 88,
+    diameterKm: 4879, distanceMkm: 57.9,
+    day: 'About 176 Earth days from one sunrise to the next',
+    year: '88 Earth days',
+    atmosphere: 'Almost none; a very thin exosphere',
+    temperature: 'About -180 °C at night to 430 °C in the day',
+    moons: '0',
+    kid: 'Mercury is the smallest planet and the closest to the Sun. A year there is only 88 Earth days!',
+    discovery: 'Known since ancient times. Mariner 10 flew by in 1974–75, and MESSENGER orbited it from 2011 to 2015.',
+    nasaQuery: 'Mercury planet MESSENGER',
+  },
+  {
+    id: 'venus', name: 'Venus', type: 'Rocky planet',
+    color: '#e8c07a', size: 6, yearDays: 225,
+    diameterKm: 12104, distanceMkm: 108.2,
+    day: 'About 117 Earth days from sunrise to sunrise; it spins backwards',
+    year: '225 Earth days',
+    atmosphere: 'Very thick carbon dioxide with clouds of sulfuric acid',
+    temperature: 'About 465 °C at the surface',
+    moons: '0',
+    kid: 'Venus is about the same size as Earth but is the hottest planet. Its thick clouds trap heat like a blanket.',
+    discovery: 'Known since ancient times. NASA’s Magellan spacecraft mapped its surface with radar in the early 1990s.',
+    nasaQuery: 'Venus planet Magellan',
+  },
+  {
+    id: 'earth', name: 'Earth', type: 'Rocky planet',
+    color: '#3b82f6', size: 6.5, yearDays: 365.25,
+    diameterKm: 12742, distanceMkm: 149.6,
+    day: '24 hours',
+    year: '365.25 days',
+    atmosphere: 'About 78% nitrogen and 21% oxygen',
+    temperature: 'Average surface temperature about 15 °C',
+    moons: '1 (the Moon)',
+    kid: 'Earth is our home and the only place we know of that has life. Liquid water covers most of its surface.',
+    discovery: 'Astronauts first saw the whole Earth from space in the 1960s.',
+    nasaQuery: 'Earth from space blue marble',
+  },
+  {
+    id: 'mars', name: 'Mars', type: 'Rocky planet',
+    color: '#d9534f', size: 5, yearDays: 687,
+    diameterKm: 6779, distanceMkm: 227.9,
+    day: 'About 24 hours 37 minutes',
+    year: '687 Earth days',
+    atmosphere: 'Very thin, mostly carbon dioxide',
+    temperature: 'Average about -63 °C',
+    moons: '2 (Phobos and Deimos)',
+    kid: 'Mars is called the Red Planet because rusty iron dust covers its surface. Robots called rovers are exploring it.',
+    discovery: 'Known since ancient times. The Perseverance rover landed on 18 February 2021.',
+    nasaQuery: 'Mars Perseverance rover',
+  },
+  {
+    id: 'jupiter', name: 'Jupiter', type: 'Gas giant',
+    color: '#d8a47f', size: 12, yearDays: 4333,
+    diameterKm: 139820, distanceMkm: 778.5,
+    day: 'About 9 hours 56 minutes',
+    year: 'About 11.9 Earth years',
+    atmosphere: 'Mostly hydrogen and helium',
+    temperature: 'About -108 °C at the cloud level',
+    moons: 'About 95 or more; the count changes',
+    kid: 'Jupiter is the biggest planet. Its Great Red Spot is a giant storm that has lasted for centuries.',
+    discovery: 'In 1610 Galileo used a telescope to see its four biggest moons.',
+    nasaQuery: 'Jupiter Juno',
+  },
+  {
+    id: 'saturn', name: 'Saturn', type: 'Gas giant',
+    color: '#e3c98b', size: 10.5, yearDays: 10759,
+    rings: true,
+    diameterKm: 116460, distanceMkm: 1434,
+    day: 'About 10 hours 33 minutes',
+    year: 'About 29.4 Earth years',
+    atmosphere: 'Mostly hydrogen and helium',
+    temperature: 'About -139 °C at the cloud level',
+    moons: 'More than 140; the count changes',
+    kid: 'Saturn is famous for its bright rings, made of billions of pieces of ice and rock.',
+    discovery: 'NASA’s Cassini spacecraft orbited Saturn from 2004 to 2017.',
+    nasaQuery: 'Saturn Cassini rings',
+  },
+  {
+    id: 'uranus', name: 'Uranus', type: 'Ice giant',
+    color: '#7fd8e0', size: 8, yearDays: 30687,
+    diameterKm: 50724, distanceMkm: 2871,
+    day: 'About 17 hours 14 minutes; it spins backwards',
+    year: 'About 84 Earth years',
+    atmosphere: 'Hydrogen, helium and methane',
+    temperature: 'About -197 °C at the cloud level',
+    moons: '27 or more; the count changes',
+    kid: 'Uranus spins tipped over on its side, so it rolls around the Sun like a ball.',
+    discovery: 'William Herschel found it in 1781. Voyager 2 visited in 1986.',
+    nasaQuery: 'Uranus planet Voyager',
+  },
+  {
+    id: 'neptune', name: 'Neptune', type: 'Ice giant',
+    color: '#4f6df5', size: 8, yearDays: 60190,
+    diameterKm: 49244, distanceMkm: 4495,
+    day: 'About 16 hours',
+    year: 'About 165 Earth years',
+    atmosphere: 'Hydrogen, helium and methane',
+    temperature: 'About -201 °C at the cloud level',
+    moons: '16 or more; the count changes',
+    kid: 'Neptune is the farthest planet from the Sun. It has powerful winds and a deep blue colour.',
+    discovery: 'Found in 1846 after mathematicians predicted its location. Voyager 2 visited in 1989.',
+    nasaQuery: 'Neptune planet Voyager',
+  },
+  {
+    id: 'pluto', name: 'Pluto', type: 'Dwarf planet',
+    dwarf: true, color: '#b69a85', size: 3.5, yearDays: 90560,
+    diameterKm: 2377, distanceMkm: 5906,
+    day: 'About 6.4 Earth days',
+    year: 'About 248 Earth years',
+    atmosphere: 'Very thin nitrogen with some methane and carbon monoxide',
+    temperature: 'Roughly -230 °C',
+    moons: '5 (Charon, Styx, Nix, Kerberos, Hydra)',
+    kid: 'Pluto is a dwarf planet, not one of the eight planets. It lives in the icy Kuiper Belt beyond Neptune.',
+    discovery: 'Clyde Tombaugh found it in 1930. The IAU classified it as a dwarf planet in 2006. New Horizons flew past in 2015.',
+    nasaQuery: 'Pluto New Horizons',
+  },
+];
+
+export const ALL_BODIES = [SUN, ...PLANETS];
+
+export const getBody = (id) =>
+  ALL_BODIES.find((body) => body.id === id);
+
+export const fmt = (number) =>
+  number.toLocaleString('en-US');
+    
