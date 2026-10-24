@@ -133,9 +133,10 @@ export default function Quiz() {
     if (selected !== null) return;
     setSelected(optionIndex);
     setAnswers((previous) => [...previous, {
-      questionId: questions[index].id || `${index}`,
-      correct: optionIndex === questions[index].correctAnswer,
-    }]);
+  questionId: questions[index].id || `${index}`,
+  question: questions[index],
+  correct: optionIndex === questions[index].correctAnswer,
+}]);
   }
 
   function nextQuestion() {
