@@ -8,7 +8,7 @@ import Planet from './pages/Planet';
 import Gallery from './pages/Gallery';
 import Credits from './pages/Credits';
 import Quiz from './pages/Quiz';
-
+import MissionControl from './pages/MissionControl';
 export default function App() {
   const location = useLocation();
 
@@ -22,6 +22,7 @@ export default function App() {
 
       <main>
         <Routes>
+<Route path="/missions" element={<MissionControl />} />
           <Route path="/" element={<Home />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/planet/:id" element={<Planet />} />
