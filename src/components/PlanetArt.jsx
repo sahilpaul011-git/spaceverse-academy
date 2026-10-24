@@ -1,117 +1,270 @@
-import { useEffect, useState } from "react";
-import { searchImages } from "../lib/nasa";
 
-const QUERIES = {
-  sun: "Sun SDO NASA",
-  mercury: "Mercury MESSENGER NASA",
-  venus: "Venus planet NASA",
-  earth: "Earth Blue Marble NASA",
-  moon: "Moon surface NASA",
-  mars: "Mars planet NASA",
-  jupiter: "Jupiter Juno NASA",
-  saturn: "Saturn Cassini NASA",
-  uranus: "Uranus Voyager 2 NASA",
-  neptune: "Neptune Voyager 2 NASA",
-  pluto: "Pluto New Horizons NASA",
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+
+const PLANET_STYLE = {
+  mercury: { base: "#77736d", light: "#c0b8a8", dark: "#34343a", type: "rock" },
+  venus: { base: "#c88d45", light: "#f4d49a", dark: "#774528", type: "cloud" },
+  earth: { base: "#1255a3", light: "#3c9bd5", dark: "#061c45", type: "earth" },
+  mars: { base: "#a8472d", light: "#e18a54", dark: "#4e2020", type: "mars" },
+  jupiter: { base: "#b9825d", light: "#f0d0a1", dark: "#774630", type: "bands" },
+  saturn: { base: "#c6a36b", light: "#f0ddb0", dark: "#826443", type: "bands" },
+  uranus: { base: "#5eb7c0", light: "#a0e4e6", dark: "#28717f", type: "cloud" },
+  neptune: { base: "#1647b4", light: "#4389ef", dark: "#07184e", type: "bands" },
 };
 
-const COLORS = {
-  sun: "#fbbf24",
-  mercury: "#9ca3af",
-  venus: "#e8c07a",
-  earth: "#3b82f6",
-  moon: "#a1a1aa",
-  mars: "#d9534f",
-  jupiter: "#d8a47f",
-  saturn: "#e3c98b",
-  uranus: "#7fd8e0",
-  neptune: "#4f6df5",
-  pluto: "#b69a85",
-};
+function makeTexture(style) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 512;
+
+  const ctx = canvas.getContext("2d");
+  const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+  gradient.addColorStop(0, style.light);
+  gradient.addColorStop(0.5, style.base);
+  gradient.addColorStop(1, style.dark);
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 1024, 512);
+
+  if (style.type === "bands") {
+    for (let y = 0; y < 512; y += 5) {
+      const wave = Math.sin(y * 0.075) * 8;
+      ctx.fillStyle = y % 31 < 14 ? style.light : style.dark;
+      ctx.globalAlpha = 0.12 + Math.random() * 0.22;
+      ctx.fillRect(0, y + wave, 1024, 2 + Math.random() * 9);
+    }
+
+    if (style.base === "#b9825d") {
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = "#b74f36";
+      ctx.beginPath();
+      ctx.ellipse(700, 270, 56, 31, -0.15, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  if (style.type === "earth") {
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = "#59a45e";
+
+    for (let i = 0; i < 26; i++) {
+      const x = Math.random() * 1024;
+      const y = Math.random() * 512;
+      ctx.beginPath();
+      ctx.ellipse(
+        x, y,
+        18 + Math.random() * 65,
+        9 + Math.random() * 35,
+        Math.random() * 3,
+        0, Math.PI * 2
+      );
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = "#f6f5ec";
+
+    for (let i = 0; i < 80; i++) {
+      ctx.beginPath();
+      ctx.ellipse(
+        Math.random() * 1024,
+        Math.random() * 512,
+        8 + Math.random() * 50,
+        2 + Math.random() * 10,
+        Math.random() * 3,
+        0, Math.PI * 2
+      );
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+  }
+
+  if (style.type === "rock" || style.type === "mars") {
+    for (let i = 0; i < 950; i++) {
+      const x = Math.random() * 1024;
+      const y = Math.random() * 512;
+      const radius = 1 + Math.random() * (style.type === "rock" ? 12 : 8);
+
+      ctx.fillStyle = i % 2 ? style.dark : style.light;
+      ctx.globalAlpha = 0.12 + Math.random() * 0.3;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = style.light;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(x, y, radius * 1.25, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  if (style.type === "cloud") {
+    for (let i = 0; i < 160; i++) {
+      ctx.fillStyle = style.light;
+      ctx.globalAlpha = 0.05 + Math.random() * 0.13;
+      ctx.beginPath();
+      ctx.ellipse(
+        Math.random() * 1024,
+        Math.random() * 512,
+        10 + Math.random() * 70,
+        3 + Math.random() * 14,
+        0, 0, Math.PI * 2
+      );
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
 
 export default function PlanetArt({
   body,
   className = "h-40 w-40",
 }) {
-  const [image, setImage] = useState("");
-  const [failed, setFailed] = useState(false);
-  const id = String(body?.id || "").toLowerCase();
+  const mountRef = useRef(null);
+  const id = String(body?.id || "earth").toLowerCase();
 
   useEffect(() => {
-    let active = true;
-    const controller = new AbortController();
+    const mount = mountRef.current;
+    const style = PLANET_STYLE[id];
 
-    setImage("");
-    setFailed(false);
+    if (!mount || !style) return undefined;
 
-    searchImages(QUERIES[id] || `${body?.name || id} NASA planet`, {
-      pageSize: 10,
-      signal: controller.signal,
-    })
-      .then(({ items }) => {
-        if (!active) return;
+    let renderer;
+    let observer;
+    let frame = 0;
 
-        const result = items.find(
-          (item) =>
-            item.thumb &&
-            /^https:\/\//i.test(item.thumb)
-        );
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+    camera.position.set(0, 0, 5.2);
 
-        if (result) {
-          setImage(result.thumb);
-        } else {
-          setFailed(true);
-        }
-      })
-      .catch((error) => {
-        if (active && error?.code !== "cancelled") {
-          setFailed(true);
-        }
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: "low-power",
       });
+    } catch {
+      mount.textContent = `${body?.name || id} 3D model requires WebGL`;
+      return undefined;
+    }
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0);
+    mount.appendChild(renderer.domElement);
+
+    const sphereGeometry = new THREE.SphereGeometry(1.35, 64, 48);
+    const material = new THREE.MeshStandardMaterial({
+      map: makeTexture(style),
+      roughness: 0.94,
+      metalness: 0,
+    });
+
+    const planet = new THREE.Mesh(sphereGeometry, material);
+    planet.rotation.z = id === "uranus" ? 0.75 : 0.08;
+    scene.add(planet);
+
+    if (id === "saturn") {
+      const ring = new THREE.Mesh(
+        new THREE.RingGeometry(1.65, 2.35, 128),
+        new THREE.MeshStandardMaterial({
+          color: "#d8c49a",
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.82,
+          roughness: 1,
+        })
+      );
+      ring.rotation.x = 1.22;
+      ring.rotation.y = -0.18;
+      planet.add(ring);
+    }
+
+    if (id === "earth") {
+      const cloud = new THREE.Mesh(
+        new THREE.SphereGeometry(1.37, 48, 36),
+        new THREE.MeshBasicMaterial({
+          color: "#e4f6ff",
+          transparent: true,
+          opacity: 0.12,
+          wireframe: true,
+        })
+      );
+      planet.add(cloud);
+    }
+
+    scene.add(new THREE.AmbientLight(0xffffff, 1.25));
+
+    const sunlight = new THREE.DirectionalLight(0xffffff, 3.2);
+    sunlight.position.set(-4, 3, 5);
+    scene.add(sunlight);
+
+    const fillLight = new THREE.PointLight(style.light, 14, 12);
+    fillLight.position.set(3, -1, 2);
+    scene.add(fillLight);
+
+    const resize = () => {
+      const width = Math.max(100, mount.clientWidth);
+      const height = Math.max(100, mount.clientHeight);
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+
+    observer = new ResizeObserver(resize);
+    observer.observe(mount);
+    resize();
+
+    const animate = () => {
+      frame = requestAnimationFrame(animate);
+      planet.rotation.y += 0.003;
+      renderer.render(scene, camera);
+    };
+
+    animate();
 
     return () => {
-      active = false;
-      controller.abort();
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      sphereGeometry.dispose();
+      material.map?.dispose();
+      material.dispose();
+      scene.traverse((object) => {
+        if (object.geometry && object.geometry !== sphereGeometry) {
+          object.geometry.dispose();
+        }
+        if (object.material && object.material !== material) {
+          object.material.dispose();
+        }
+      });
+      renderer.dispose();
+      renderer.domElement.remove();
     };
   }, [id, body?.name]);
 
-  const color = COLORS[id] || body?.color || "#64748b";
-
   return (
     <div
-      className={`relative overflow-hidden rounded-full ${className}`}
+      ref={mountRef}
+      className={className}
       role="img"
-      aria-label={`${body?.name || "Space object"} image`}
+      aria-label={`Rotating 3D model of ${body?.name || id}`}
       style={{
-        background: `radial-gradient(circle at 30% 25%, ${color}, #101426 85%)`,
-        boxShadow: `0 0 28px ${color}30`,
+        minWidth: 0,
+        minHeight: 100,
+        overflow: "hidden",
+        borderRadius: "50%",
+        background:
+          "radial-gradient(circle at 35% 25%, #17255466, #02061700 72%)",
+        touchAction: "pan-y",
       }}
-    >
-      {image && !failed ? (
-        <img
-          src={image}
-          alt={`${body?.name || "Space object"} — NASA image`}
-          className="h-full w-full rounded-full object-cover"
-          loading="lazy"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <div
-            className="h-[70%] w-[70%] rounded-full"
-            style={{
-              background: `radial-gradient(circle at 30% 25%, ${color}, #080b18 90%)`,
-              boxShadow: `inset -12px -8px 18px #0009, 0 0 20px ${color}50`,
-            }}
-          />
-        </div>
-      )}
-
-      {failed && (
-        <span className="absolute bottom-1 left-0 right-0 text-center text-[9px] text-white/70">
-          Illustration
-        </span>
-      )}
-    </div>
+    />
   );
 }
