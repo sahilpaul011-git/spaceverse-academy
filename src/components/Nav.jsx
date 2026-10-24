@@ -5,6 +5,7 @@ const links = [
   ['/', 'Home'],
   ['/explore', 'Solar System'],
   ['/quiz', 'Quiz Arena'],
+  ['/missions', '🚀 Missions'],
   ['/gallery', 'Space Gallery'],
   ['/credits', 'Credits & About'],
 ];
