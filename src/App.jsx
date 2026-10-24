@@ -9,6 +9,7 @@ import Gallery from './pages/Gallery';
 import Credits from './pages/Credits';
 import Quiz from './pages/Quiz';
 import MissionControl from './pages/MissionControl';
+import CosmicLab from './pages/CosmicLab';
 export default function App() {
   const location = useLocation();
 
