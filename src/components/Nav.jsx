@@ -6,6 +6,7 @@ const links = [
   ['/explore', 'Solar System'],
   ['/quiz', 'Quiz Arena'],
   ['/missions', '🚀 Missions'],
+  ['/cosmic-lab', '🔭 Cosmic Lab'],
   ['/gallery', 'Space Gallery'],
   ['/credits', 'Credits & About'],
 ];
