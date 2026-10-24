@@ -5,107 +5,51 @@ const STORAGE_KEY = 'spaceverse-cosmic-lab-v1';
 
 const PLANETS = [
   {
-    id: 'mercury',
-    name: 'Mercury',
-    icon: '🌑',
-    color: '#A9A9A9',
-    diameter: 4879,
-    gravity: 0.38,
-    temperature: '167°C average',
-    day: '58.6 Earth days',
-    distance: 0.39,
-    moons: 0,
+    id: 'mercury', name: 'Mercury', icon: '🌑', color: '#A9A9A9',
+    diameter: 4879, gravity: 0.38, temperature: '167°C average',
+    day: '58.6 Earth days', distance: 0.39, moons: 0,
     fact: 'Mercury is the smallest planet and the closest to the Sun.',
   },
   {
-    id: 'venus',
-    name: 'Venus',
-    icon: '🟠',
-    color: '#E7AD69',
-    diameter: 12104,
-    gravity: 0.90,
-    temperature: '464°C average',
-    day: '243 Earth days',
-    distance: 0.72,
-    moons: 0,
+    id: 'venus', name: 'Venus', icon: '🟠', color: '#E7AD69',
+    diameter: 12104, gravity: 0.90, temperature: '464°C average',
+    day: '243 Earth days', distance: 0.72, moons: 0,
     fact: 'Venus is the hottest planet because its thick atmosphere traps heat.',
   },
   {
-    id: 'earth',
-    name: 'Earth',
-    icon: '🌍',
-    color: '#38BDF8',
-    diameter: 12742,
-    gravity: 1,
-    temperature: '15°C average',
-    day: '24 hours',
-    distance: 1,
-    moons: 1,
+    id: 'earth', name: 'Earth', icon: '🌍', color: '#38BDF8',
+    diameter: 12742, gravity: 1, temperature: '15°C average',
+    day: '24 hours', distance: 1, moons: 1,
     fact: 'Earth is the only world currently known to support life.',
   },
   {
-    id: 'mars',
-    name: 'Mars',
-    icon: '🔴',
-    color: '#F87171',
-    diameter: 6779,
-    gravity: 0.38,
-    temperature: '-65°C average',
-    day: '24.6 hours',
-    distance: 1.52,
-    moons: 2,
+    id: 'mars', name: 'Mars', icon: '🔴', color: '#F87171',
+    diameter: 6779, gravity: 0.38, temperature: '-65°C average',
+    day: '24.6 hours', distance: 1.52, moons: 2,
     fact: 'Mars looks red because its surface contains rusty iron minerals.',
   },
   {
-    id: 'jupiter',
-    name: 'Jupiter',
-    icon: '🟤',
-    color: '#D6A77A',
-    diameter: 139820,
-    gravity: 2.53,
-    temperature: '-110°C cloud tops',
-    day: '9.9 hours',
-    distance: 5.20,
-    moons: 101,
+    id: 'jupiter', name: 'Jupiter', icon: '🟤', color: '#D6A77A',
+    diameter: 139820, gravity: 2.53, temperature: '-110°C cloud tops',
+    day: '9.9 hours', distance: 5.20, moons: 101,
     fact: 'Jupiter is the largest planet and has a giant storm called the Great Red Spot.',
   },
   {
-    id: 'saturn',
-    name: 'Saturn',
-    icon: '🪐',
-    color: '#E8D29A',
-    diameter: 116460,
-    gravity: 1.07,
-    temperature: '-140°C cloud tops',
-    day: '10.7 hours',
-    distance: 9.58,
-    moons: 274,
+    id: 'saturn', name: 'Saturn', icon: '🪐', color: '#E8D29A',
+    diameter: 116460, gravity: 1.07, temperature: '-140°C cloud tops',
+    day: '10.7 hours', distance: 9.58, moons: 274,
     fact: 'Saturn’s beautiful rings are made mostly of ice and rocky pieces.',
   },
   {
-    id: 'uranus',
-    name: 'Uranus',
-    icon: '🩵',
-    color: '#67E8F9',
-    diameter: 50724,
-    gravity: 0.89,
-    temperature: '-195°C cloud tops',
-    day: '17.2 hours',
-    distance: 19.2,
-    moons: 29,
+    id: 'uranus', name: 'Uranus', icon: '🩵', color: '#67E8F9',
+    diameter: 50724, gravity: 0.89, temperature: '-195°C cloud tops',
+    day: '17.2 hours', distance: 19.2, moons: 29,
     fact: 'Uranus rotates on its side compared with most other planets.',
   },
   {
-    id: 'neptune',
-    name: 'Neptune',
-    icon: '🔵',
-    color: '#60A5FA',
-    diameter: 49244,
-    gravity: 1.14,
-    temperature: '-200°C cloud tops',
-    day: '16.1 hours',
-    distance: 30.05,
-    moons: 16,
+    id: 'neptune', name: 'Neptune', icon: '🔵', color: '#60A5FA',
+    diameter: 49244, gravity: 1.14, temperature: '-200°C cloud tops',
+    day: '16.1 hours', distance: 30.05, moons: 16,
     fact: 'Neptune is a distant, windy world beyond Uranus.',
   },
 ];
@@ -113,25 +57,19 @@ const PLANETS = [
 const CHALLENGES = [
   {
     id: 'largest',
-    question: 'Which of these two planets has the larger diameter?',
+    question: 'Which planet has the larger diameter?',
     getAnswer: (a, b) =>
-      a.diameter === b.diameter
-        ? 'same'
-        : a.diameter > b.diameter
-          ? a.id
-          : b.id,
+      a.diameter === b.diameter ? 'same' : a.diameter > b.diameter ? a.id : b.id,
     explanation: (a, b) =>
-      `${a.name} is ${a.diameter > b.diameter ? 'larger' : a.diameter < b.diameter ? 'smaller' : 'the same size as'} ${b.name} by diameter.`,
+      a.diameter === b.diameter
+        ? `${a.name} and ${b.name} have equal diameters.`
+        : `${a.diameter > b.diameter ? a.name : b.name} has the larger diameter.`,
   },
   {
     id: 'gravity',
     question: 'On which planet would you feel stronger gravity?',
     getAnswer: (a, b) =>
-      a.gravity === b.gravity
-        ? 'same'
-        : a.gravity > b.gravity
-          ? a.id
-          : b.id,
+      a.gravity === b.gravity ? 'same' : a.gravity > b.gravity ? a.id : b.id,
     explanation: (a, b) =>
       `${a.name}: ${a.gravity} times Earth's gravity. ${b.name}: ${b.gravity} times Earth's gravity.`,
   },
@@ -139,13 +77,11 @@ const CHALLENGES = [
     id: 'distance',
     question: 'Which planet is farther from the Sun?',
     getAnswer: (a, b) =>
-      a.distance === b.distance
-        ? 'same'
-        : a.distance > b.distance
-          ? a.id
-          : b.id,
+      a.distance === b.distance ? 'same' : a.distance > b.distance ? a.id : b.id,
     explanation: (a, b) =>
-      `${a.name} is ${a.distance > b.distance ? 'farther from' : a.distance < b.distance ? 'closer to' : at} the Sun: ${a.distance} AU versus ${b.distance} AU.`,
+      a.distance === b.distance
+        ? `${a.name} and ${b.name} are at the same listed distance from the Sun.`
+        : `${a.distance > b.distance ? a.name : b.name} is farther from the Sun. ${a.name}: ${a.distance} AU; ${b.name}: ${b.distance} AU.`,
   },
 ];
 
@@ -166,10 +102,12 @@ export default function CosmicLab() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       if (Array.isArray(saved.completed)) {
-        setCompleted(saved.completed.filter((id) => typeof id === 'string'));
+        setCompleted(
+          [...new Set(saved.completed.filter((id) => typeof id === 'string'))]
+        );
       }
     } catch {
-      // The lab still works if browser storage is unavailable.
+      // The lab remains usable if browser storage is unavailable.
     } finally {
       setLoaded(true);
     }
@@ -180,54 +118,38 @@ export default function CosmicLab() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ completed }));
     } catch {
-      // Progress remains available for this session.
+      // Progress still works for this session.
     }
   }, [completed, loaded]);
 
   const first = PLANETS.find((planet) => planet.id === firstId) || PLANETS[2];
-  const second =
-    PLANETS.find((planet) => planet.id === secondId) || PLANETS[3];
+  const second = PLANETS.find((planet) => planet.id === secondId) || PLANETS[3];
   const challenge = CHALLENGES[challengeIndex];
 
   const pairKey = [first.id, second.id].sort().join('-');
   const challengeKey = `${pairKey}-${challenge.id}`;
   const alreadyCompleted = completed.includes(challengeKey);
-
   const xp = completed.length * 25;
+
   const badges = [
-    {
-      title: 'Cosmic Beginner',
-      icon: '🌟',
-      unlocked: completed.length >= 1,
-      hint: 'Answer one challenge',
-    },
-    {
-      title: 'Planet Pro',
-      icon: '🪐',
-      unlocked: completed.length >= 5,
-      hint: 'Answer five challenges',
-    },
-    {
-      title: 'Galaxy Genius',
-      icon: '🏆',
-      unlocked: completed.length >= 10,
-      hint: 'Answer ten challenges',
-    },
+    { title: 'Cosmic Beginner', icon: '🌟', unlocked: completed.length >= 1, hint: 'Answer one challenge' },
+    { title: 'Planet Pro', icon: '🪐', unlocked: completed.length >= 5, hint: 'Answer five challenges' },
+    { title: 'Galaxy Genius', icon: '🏆', unlocked: completed.length >= 10, hint: 'Answer ten challenges' },
   ];
 
   const sizeDifference = useMemo(() => {
-    const ratio = Math.max(first.diameter, second.diameter) /
-      Math.min(first.diameter, second.diameter);
-    return ratio.toFixed(1);
+    const larger = Math.max(first.diameter, second.diameter);
+    const smaller = Math.min(first.diameter, second.diameter);
+    return (larger / smaller).toFixed(1);
   }, [first.diameter, second.diameter]);
 
   function changePlanet(which, id) {
     if (which === 'first') {
-      setFirstId(id);
       if (id === secondId) setSecondId(firstId);
+      setFirstId(id);
     } else {
-      setSecondId(id);
       if (id === firstId) setFirstId(secondId);
+      setSecondId(id);
     }
     setChoice('');
     setFeedback(null);
@@ -235,28 +157,31 @@ export default function CosmicLab() {
 
   function chooseAnswer(answer) {
     setChoice(answer);
+    const correct = answer === challenge.getAnswer(first, second);
+
     if (alreadyCompleted) {
       setFeedback({
-        correct: answer === challenge.getAnswer(first, second),
-        message: 'You have already earned XP for this challenge.',
+        correct,
+        message: correct
+          ? 'Correct! You have already earned XP for this challenge.'
+          : 'Not quite. Compare the facts and try again.',
       });
       return;
     }
 
-    const correct = answer === challenge.getAnswer(first, second);
-    setFeedback({
-      correct,
-      message: correct
-        ? 'Brilliant! You earned 25 XP. Keep exploring!'
-        : 'Not quite! Check the comparison and try another challenge.',
-    });
-
     if (correct) {
       setCompleted((current) =>
-        current.includes(challengeKey)
-          ? current
-          : [...current, challengeKey]
+        current.includes(challengeKey) ? current : [...current, challengeKey]
       );
+      setFeedback({
+        correct: true,
+        message: 'Brilliant! You earned 25 XP. Keep exploring!',
+      });
+    } else {
+      setFeedback({
+        correct: false,
+        message: 'Not quite! Check the comparison and try again.',
+      });
     }
   }
 
@@ -279,9 +204,7 @@ export default function CosmicLab() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:py-10">
       <header className="relative overflow-hidden rounded-3xl border border-cyan-300/20 bg-gradient-to-br from-indigo-950 via-slate-900 to-cyan-950 p-6 sm:p-10">
-        <div className="pointer-events-none absolute -right-4 -top-6 text-8xl opacity-20" aria-hidden="true">
-          🪐
-        </div>
+        <div className="pointer-events-none absolute -right-4 -top-6 text-8xl opacity-20" aria-hidden="true">🪐</div>
         <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-cyan-300">
           SpaceVerse Academy · Discovery lab
         </p>
@@ -292,66 +215,46 @@ export default function CosmicLab() {
           Put two planets side by side. Compare their sizes, gravity, days,
           temperatures, and distances from the Sun. Then test your space smarts!
         </p>
-
         <div className="mt-6 grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-white/10 bg-white/[0.07] p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-cyan-200">
-              Your XP
-            </p>
+            <p className="text-xs font-bold uppercase tracking-wider text-cyan-200">Your XP</p>
             <p className="mt-1 text-3xl font-black text-white">{xp}</p>
             <p className="text-xs text-slate-300">From correct answers</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.07] p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-cyan-200">
-              Challenges solved
-            </p>
-            <p className="mt-1 text-3xl font-black text-white">
-              {completed.length}
-            </p>
+            <p className="text-xs font-bold uppercase tracking-wider text-cyan-200">Challenges solved</p>
+            <p className="mt-1 text-3xl font-black text-white">{completed.length}</p>
             <p className="text-xs text-slate-300">Saved on this device</p>
           </div>
         </div>
       </header>
 
       <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 sm:p-7">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
-            Choose your worlds
-          </p>
-          <h2 className="mt-1 text-2xl font-black">Planet selector</h2>
-        </div>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Choose your worlds</p>
+        <h2 className="mt-1 text-2xl font-black">Planet selector</h2>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <label className="block">
-            <span className="mb-2 block text-sm font-bold text-slate-200">
-              Planet A
-            </span>
+            <span className="mb-2 block text-sm font-bold text-slate-200">Planet A</span>
             <select
               value={firstId}
               onChange={(event) => changePlanet('first', event.target.value)}
               className="min-h-12 w-full rounded-xl border border-white/15 bg-slate-950 px-3 py-3 text-base text-white"
             >
               {PLANETS.map((planet) => (
-                <option key={planet.id} value={planet.id}>
-                  {planet.icon} {planet.name}
-                </option>
+                <option key={planet.id} value={planet.id}>{planet.icon} {planet.name}</option>
               ))}
             </select>
           </label>
-
           <label className="block">
-            <span className="mb-2 block text-sm font-bold text-slate-200">
-              Planet B
-            </span>
+            <span className="mb-2 block text-sm font-bold text-slate-200">Planet B</span>
             <select
               value={secondId}
               onChange={(event) => changePlanet('second', event.target.value)}
               className="min-h-12 w-full rounded-xl border border-white/15 bg-slate-950 px-3 py-3 text-base text-white"
             >
               {PLANETS.map((planet) => (
-                <option key={planet.id} value={planet.id}>
-                  {planet.icon} {planet.name}
-                </option>
+                <option key={planet.id} value={planet.id}>{planet.icon} {planet.name}</option>
               ))}
             </select>
           </label>
@@ -359,16 +262,9 @@ export default function CosmicLab() {
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {[first, second].map((planet) => {
-            const diameter = Math.max(
-              12,
-              (planet.diameter / maxDiameter) * 150
-            );
-
+            const diameter = Math.max(12, (planet.diameter / maxDiameter) * 150);
             return (
-              <article
-                key={planet.id}
-                className="flex min-h-56 flex-col items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-b from-indigo-950/80 to-slate-950 p-5 text-center"
-              >
+              <article key={planet.id} className="flex min-h-56 flex-col items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-b from-indigo-950/80 to-slate-950 p-5 text-center">
                 <div className="flex h-40 w-full items-center justify-center">
                   <div
                     className="rounded-full shadow-[0_0_35px_rgba(96,165,250,0.22)]"
@@ -383,23 +279,19 @@ export default function CosmicLab() {
                   />
                 </div>
                 <h3 className="mt-2 text-xl font-black">{planet.icon} {planet.name}</h3>
-                <p className="mt-1 text-sm text-slate-300">
-                  Diameter: {formatNumber(planet.diameter)} km
-                </p>
+                <p className="mt-1 text-sm text-slate-300">Diameter: {formatNumber(planet.diameter)} km</p>
               </article>
             );
           })}
         </div>
 
         <p className="mt-4 text-center text-xs leading-relaxed text-slate-400">
-          Size illustration scales with diameter. A minimum display size keeps
-          smaller planets visible on phones.
+          Planet illustrations are scaled to compare diameters. A minimum size
+          keeps smaller planets visible on phones.
         </p>
 
         <div className="mt-5 rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.06] p-4">
-          <p className="text-xs font-extrabold uppercase tracking-wider text-cyan-200">
-            Quick discovery
-          </p>
+          <p className="text-xs font-extrabold uppercase tracking-wider text-cyan-200">Quick discovery</p>
           <p className="mt-2 text-lg font-bold">
             {first.diameter > second.diameter
               ? `${first.name} is larger than ${second.name}.`
@@ -408,19 +300,15 @@ export default function CosmicLab() {
                 : 'Both planets have the same diameter.'}
           </p>
           <p className="mt-1 text-sm text-slate-300">
-            The larger planet is about {sizeDifference} times the diameter of
-            the smaller planet.
+            The larger planet is about {sizeDifference} times the diameter of the smaller planet.
           </p>
         </div>
       </section>
 
       <section className="overflow-hidden rounded-3xl border border-violet-300/20 bg-violet-950/20">
         <div className="p-5 sm:p-7">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
-            The science scoreboard
-          </p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">The science scoreboard</p>
           <h2 className="mt-1 text-2xl font-black">Compare the facts</h2>
-
           <div className="mt-5 overflow-x-auto">
             <table className="w-full min-w-[420px] border-collapse text-left text-sm">
               <thead>
@@ -440,9 +328,7 @@ export default function CosmicLab() {
                   ['Known moons', first.moons, second.moons],
                 ].map(([label, a, b]) => (
                   <tr key={label} className="border-b border-white/10 last:border-0">
-                    <th scope="row" className="px-3 py-3 font-semibold text-slate-200">
-                      {label}
-                    </th>
+                    <th scope="row" className="px-3 py-3 font-semibold text-slate-200">{label}</th>
                     <td className="px-3 py-3 text-slate-300">{a}</td>
                     <td className="px-3 py-3 text-slate-300">{b}</td>
                   </tr>
@@ -451,33 +337,26 @@ export default function CosmicLab() {
             </table>
           </div>
           <p className="mt-4 text-xs leading-relaxed text-slate-400">
-            AU means astronomical unit: approximately the average distance
-            between Earth and the Sun. Temperature figures are approximate;
-            cloud-top and surface conditions vary by planet.
+            AU means astronomical unit, approximately the average Earth–Sun distance.
+            Temperature figures are approximate; cloud-top and surface conditions vary.
+            Moon counts may change as new observations are confirmed.
           </p>
         </div>
-
         <div className="grid gap-3 border-t border-white/10 p-5 sm:grid-cols-2 sm:p-7">
           {[first, second].map((planet) => (
             <div key={planet.id} className="rounded-2xl bg-black/20 p-4">
               <h3 className="font-extrabold">{planet.icon} {planet.name} fact</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-300">
-                {planet.fact}
-              </p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">{planet.fact}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section className="rounded-3xl border border-amber-300/20 bg-gradient-to-br from-amber-950/30 to-slate-950 p-5 sm:p-7">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
-          Brain booster · +25 XP
-        </p>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-200">Brain booster · +25 XP</p>
         <h2 className="mt-1 text-2xl font-black">Cosmic challenge</h2>
         <p className="mt-3 text-lg font-bold">{challenge.question}</p>
-        <p className="mt-1 text-sm text-slate-300">
-          Compare {first.name} and {second.name}, then choose your answer.
-        </p>
+        <p className="mt-1 text-sm text-slate-300">Compare {first.name} and {second.name}, then choose your answer.</p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           {[
@@ -495,8 +374,7 @@ export default function CosmicLab() {
                   : 'border-white/15 bg-slate-950/60 text-white hover:border-cyan-300/50'
               }`}
             >
-              <span className="mr-2" aria-hidden="true">{option.icon}</span>
-              {option.label}
+              <span className="mr-2" aria-hidden="true">{option.icon}</span>{option.label}
             </button>
           ))}
         </div>
@@ -511,9 +389,7 @@ export default function CosmicLab() {
             }`}
           >
             <p className="font-extrabold">{feedback.message}</p>
-            {feedback.correct && (
-              <p className="mt-2 text-sm">{challenge.explanation(first, second)}</p>
-            )}
+            {feedback.correct && <p className="mt-2 text-sm">{challenge.explanation(first, second)}</p>}
           </div>
         )}
 
@@ -535,8 +411,8 @@ export default function CosmicLab() {
         </div>
         {alreadyCompleted && (
           <p className="mt-3 text-xs text-slate-400">
-            You've already earned XP for this planet pair and question. Change
-            the planets or switch challenge to discover more.
+            XP has already been earned for this planet pair and question.
+            Change planets or switch challenges to discover more.
           </p>
         )}
       </section>
@@ -544,9 +420,7 @@ export default function CosmicLab() {
       <section className="rounded-3xl border border-white/10 bg-slate-900/70 p-5 sm:p-7">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
-              Keep discovering
-            </p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Keep discovering</p>
             <h2 className="mt-1 text-2xl font-black">Cosmic badges</h2>
           </div>
           <p className="text-sm text-slate-300">
@@ -566,9 +440,7 @@ export default function CosmicLab() {
               <p className="text-4xl">{badge.unlocked ? badge.icon : '🔒'}</p>
               <h3 className="mt-3 font-extrabold">{badge.title}</h3>
               <p className="mt-1 text-sm text-slate-300">{badge.hint}</p>
-              <p className={`mt-3 text-xs font-bold ${
-                badge.unlocked ? 'text-amber-200' : 'text-slate-400'
-              }`}>
+              <p className={`mt-3 text-xs font-bold ${badge.unlocked ? 'text-amber-200' : 'text-slate-400'}`}>
                 {badge.unlocked ? 'BADGE UNLOCKED' : 'LOCKED'}
               </p>
             </article>
@@ -577,10 +449,8 @@ export default function CosmicLab() {
       </section>
 
       <p className="text-xs leading-relaxed text-slate-400">
-        Learning data is built into this page. XP and badges are saved locally
-        in this browser and do not sync with Mission Control or other devices.
-        Moon counts and planetary measurements can change as new observations
-        are confirmed; the figures here are educational reference values.
+        XP and badges are stored locally in this browser and do not sync with
+        Mission Control or other devices.
       </p>
     </div>
   );
