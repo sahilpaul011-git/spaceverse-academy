@@ -7,58 +7,43 @@ import Explore from './pages/Explore';
 import Planet from './pages/Planet';
 import Gallery from './pages/Gallery';
 import Credits from './pages/Credits';
+import Quiz from './pages/Quiz';
 
-function ScrollTop() {
-  const { pathname } = useLocation();
+export default function App() {
+  const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [location.pathname]);
 
-  return null;
-}
-
-export default function App() {
   return (
-    <>
-      <ScrollTop />
+    <div className="min-h-screen">
       <Nav />
 
-      <main id="main" className="mx-auto max-w-6xl px-4 py-6">
+      <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/planet/:id" element={<Planet />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/credits" element={<Credits />} />
-
+          <Route path="/quiz" element={<Quiz />} />
           <Route
             path="*"
             element={
-              <div className="card text-center">
-                <h1 className="text-2xl font-extrabold">
-                  Lost in space!
-                </h1>
-                <p className="my-3">
-                  We could not find that page.
-                </p>
-                <Link to="/" className="btn-primary">
-                  Back to base
+              <div className="mx-auto max-w-4xl px-4 py-20 text-center">
+                <h1 className="text-3xl font-bold">Page not found</h1>
+                <Link
+                  to="/"
+                  className="mt-4 inline-block text-blue-600 underline"
+                >
+                  Return home
                 </Link>
               </div>
             }
           />
         </Routes>
       </main>
-
-      <footer className="border-t border-white/10 px-4 py-6 text-center text-xs text-slate-300">
-        SpaceVerse Academy is an independent project and is not
-        affiliated with or endorsed by NASA. Images come from the
-        NASA Images and Video Library.{' '}
-        <Link className="underline" to="/credits">
-          Credits
-        </Link>
-      </footer>
-    </>
+    </div>
   );
-                                     }
+}
