@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { PLANETS } from '../data/planets';
 
@@ -35,8 +36,9 @@ export default function OrbitView({
         lastPaint.current = now;
       }
 
-      if (now - lastPaint.current > 33) {
-        setT((v) => v + ((now - lastFrame.current) / 1000) * speed);
+      if (now - lastPaint.current >= 33) {
+        const elapsed = (now - lastFrame.current) / 1000;
+        setT((v) => v + elapsed * speed);
         lastFrame.current = now;
         lastPaint.current = now;
       }
@@ -45,7 +47,6 @@ export default function OrbitView({
     };
 
     raf.current = requestAnimationFrame(tick);
-
     return () => cancelAnimationFrame(raf.current);
   }, [playing, speed]);
 
@@ -61,7 +62,6 @@ export default function OrbitView({
 
   const pos = (b) => {
     const a = b.phase + (t * 0.9) / Math.sqrt(b.yearDays / 88);
-
     return [
       C + b.r * Math.cos(a),
       C + b.r * Math.sin(a),
@@ -86,28 +86,47 @@ export default function OrbitView({
         viewBox={vb}
         className="mx-auto aspect-square w-full max-w-[640px] touch-manipulation"
         role="group"
-        aria-label="Solar System orbit diagram, not to scale. Tab through the planets or use the planet buttons."
-      > <defs>
-  {bodies.map((b) => (
-    <radialGradient
-      key={`${b.id}-surface`}
-      id={`planet-${b.id}`}
-      cx="30%"
-      cy="25%"
-      r="75%"
-    >
-      <stop offset="0%" stopColor="#ffffff" stopOpacity=".95" />
-      <stop offset="18%" stopColor={b.color} />
-      <stop offset="72%" stopColor={b.color} />
-      <stop offset="100%" stopColor="#020617" stopOpacity=".95" />
-    </radialGradient>
-  ))}
-  <radialGradient id="sun-glow">
-    <stop offset="0%" stopColor="#fff7c2" />
-    <stop offset="55%" stopColor="#fbbf24" />
-    <stop offset="100%" stopColor="#ea580c" />
-  </radialGradient>
-</defs>
+        aria-label="Animated solar system. Orbit distances and planet sizes are not to scale."
+      >
+        <defs>
+          {bodies.map((b) => (
+            <radialGradient
+              key={`${b.id}-surface`}
+              id={`planet-${b.id}`}
+              cx="30%"
+              cy="25%"
+              r="75%"
+            >
+              <stop offset="0%" stopColor="#ffffff" stopOpacity=".95" />
+              <stop offset="18%" stopColor={b.color} />
+              <stop offset="72%" stopColor={b.color} />
+              <stop offset="100%" stopColor="#020617" stopOpacity=".98" />
+            </radialGradient>
+          ))}
+
+          <radialGradient id="sun-glow">
+            <stop offset="0%" stopColor="#fffde7" />
+            <stop offset="35%" stopColor="#fde68a" />
+            <stop offset="72%" stopColor="#f59e0b" />
+            <stop offset="100%" stopColor="#ea580c" />
+          </radialGradient>
+
+          <radialGradient id="space-glow">
+            <stop offset="0%" stopColor="#312e81" stopOpacity=".35" />
+            <stop offset="100%" stopColor="#020617" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        <rect
+          x={cx - 400}
+          y={cy - 400}
+          width="800"
+          height="800"
+          fill="#050817"
+        />
+
+        <circle cx={C} cy={C} r="270" fill="url(#space-glow)" />
+
         {bodies.map((b) => (
           <circle
             key={`${b.id}-orbit`}
@@ -115,8 +134,8 @@ export default function OrbitView({
             cy={C}
             r={b.r}
             fill="none"
-            stroke="#8aa0ff"
-            strokeOpacity={b.dwarf ? 0.35 : 0.22}
+            stroke="#a5b4fc"
+            strokeOpacity={b.dwarf ? 0.3 : 0.2}
             strokeDasharray={b.dwarf ? '4 5' : undefined}
             strokeWidth={b.id === selectedId ? 2 : 1}
           />
@@ -133,11 +152,23 @@ export default function OrbitView({
           <circle
             cx={C}
             cy={C}
-            r={30}
-            fill="#fbbf24"
-            opacity=".25"
+            r="34"
+            fill="#f59e0b"
+            opacity=".15"
           />
-          <circle cx={C} cy={C} r={22} fill="#fbbf24" />
+          <circle
+            cx={C}
+            cy={C}
+            r="27"
+            fill="#fbbf24"
+            opacity=".15"
+          />
+          <circle
+            cx={C}
+            cy={C}
+            r="22"
+            fill="url(#sun-glow)"
+          />
         </g>
 
         {bodies.map((b) => {
@@ -158,7 +189,7 @@ export default function OrbitView({
               <circle
                 cx={x}
                 cy={y}
-                r={Math.max(15, b.size + 8) / (zoom > 1 ? zoom * 0.7 : 1)}
+                r={Math.max(15, b.size + 9) / (zoom > 1 ? zoom * 0.7 : 1)}
                 fill="transparent"
               />
 
@@ -166,10 +197,11 @@ export default function OrbitView({
                 <ellipse
                   cx={x}
                   cy={y}
-                  rx={b.size * 1.9}
-                  ry={b.size * 0.55}
+                  rx={b.size * 2}
+                  ry={b.size * 0.65}
                   fill="none"
-                  stroke="#e3c98b"
+                  stroke="#d6c18a"
+                  strokeOpacity=".9"
                   strokeWidth="2"
                   transform={`rotate(-20 ${x} ${y})`}
                 />
@@ -178,16 +210,30 @@ export default function OrbitView({
               <circle
                 cx={x}
                 cy={y}
-                r={b.size}
-                fill={b.color}
-                stroke={active ? '#fbbf24' : 'none'}
-                strokeWidth="2.5"
+                r={b.size + (active ? 1 : 0)}
+                fill={`url(#planet-${b.id})`}
+                stroke={active ? '#fde68a' : '#ffffff22'}
+                strokeWidth={active ? 2.5 : 0.7}
               />
+
+              {b.rings && (
+                <ellipse
+                  cx={x}
+                  cy={y}
+                  rx={b.size * 2}
+                  ry={b.size * 0.65}
+                  fill="none"
+                  stroke="#e8d6a5"
+                  strokeOpacity=".85"
+                  strokeWidth="1.5"
+                  transform={`rotate(-20 ${x} ${y})`}
+                />
+              )}
 
               {!compact && (active || zoom > 1.5 || b.r < 200) && (
                 <text
                   x={x}
-                  y={y - b.size - 5}
+                  y={y - b.size - 7}
                   textAnchor="middle"
                   fontSize={11 / (zoom > 1 ? Math.sqrt(zoom) : 1)}
                   fill="#fff"
@@ -224,10 +270,7 @@ export default function OrbitView({
               －
             </button>
 
-            <span
-              className="min-w-[3.5rem] text-center text-sm"
-              aria-live="polite"
-            >
+            <span className="min-w-[3.5rem] text-center text-sm">
               {zoom.toFixed(1)}×
             </span>
 
@@ -259,10 +302,10 @@ export default function OrbitView({
             <input
               type="range"
               min="0.25"
-              max="4"
+              max="2"
               step="0.25"
               value={speed}
-              onChange={(e) => setSpeed(+e.target.value)}
+              onChange={(e) => setSpeed(Number(e.target.value))}
               className="w-full accent-violet-500"
               aria-valuetext={`${speed} times`}
             />
@@ -270,13 +313,13 @@ export default function OrbitView({
           </label>
 
           <p className="mt-2 text-center text-xs text-cyan-300">
-            Not to scale: real orbits are far more spread out, planet
-            sizes are exaggerated, and orbit speeds are sped up and
-            compressed. Zoom centres on the selected planet.
+            Educational model, not to scale. Planet sizes, orbital distances,
+            and speeds are simplified. Planets follow separate fixed orbital
+            paths, so collisions are not simulated. Zoom centres on the
+            selected planet.
           </p>
         </>
       )}
     </div>
   );
-    }
-      
+}
