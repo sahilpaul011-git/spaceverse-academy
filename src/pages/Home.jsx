@@ -2,453 +2,1474 @@
 import { Link } from 'react-router-dom';
 import OrbitView from '../components/OrbitView';
 
-const learningZones = [
+const destinations = [
   {
+    number: '01',
     icon: '🪐',
-    title: 'Solar System Explorer',
-    description: 'Explore planets, moons, orbits, and amazing facts about our cosmic neighbourhood.',
-    tag: 'START EXPLORING',
-    to: '/explore',
-    color: 'from-cyan-400/20 to-blue-600/10',
+    title: 'Solar System',
+    description: 'Meet eight planets and explore their fascinating orbits.',
+    route: '/explore',
+    label: 'EXPLORE WORLDS',
   },
   {
+    number: '02',
     icon: '🧪',
     title: 'Cosmic Lab',
-    description: 'Discover space science through interactive experiments and cosmic discoveries.',
-    tag: 'EXPERIMENT',
-    to: '/cosmic-lab',
-    color: 'from-violet-500/25 to-fuchsia-500/10',
+    description: 'Discover the physics, forces, and mysteries of space.',
+    route: '/cosmic-lab',
+    label: 'RUN EXPERIMENTS',
   },
   {
-    icon: '🌠',
-    title: 'What If? Universe',
-    description: 'What if Earth had two moons? What if the Sun disappeared? Explore the possibilities.',
-    tag: 'TEST YOUR IDEAS',
-    to: '/what-if',
-    color: 'from-indigo-500/25 to-cyan-500/10',
+    number: '03',
+    icon: '✦',
+    title: 'What If?',
+    description: 'Imagine impossible cosmic events and explore the outcomes.',
+    route: '/what-if',
+    label: 'QUESTION REALITY',
   },
   {
-    icon: '🛰️',
+    number: '04',
+    icon: '🚀',
     title: 'Mission Control',
-    description: 'Take on space missions, follow your progress, and become a space explorer.',
-    tag: 'ACCEPT A MISSION',
-    to: '/missions',
-    color: 'from-amber-400/20 to-orange-500/10',
+    description: 'Take on space missions and follow your explorer journey.',
+    route: '/missions',
+    label: 'START A MISSION',
   },
 ];
 
 const discoveries = [
   {
-    title: 'Pillars of Creation',
-    subtitle: 'Stellar nurseries',
-    query: 'Webb Hubble Pillars of Creation',
-    icon: '✨',
-  },
-  {
-    title: 'The Red Planet',
-    subtitle: 'Discover Mars',
-    query: 'NASA Mars rover landscape',
-    icon: '🔴',
-  },
-  {
-    title: 'Saturn’s Rings',
-    subtitle: 'A spectacular world',
-    query: 'NASA Cassini Saturn rings',
-    icon: '🪐',
-  },
-  {
-    title: 'Beyond Our Galaxy',
-    subtitle: 'Galaxies and deep space',
-    query: 'NASA Hubble distant galaxies',
     icon: '🌌',
+    title: 'Deep Space',
+    subtitle: 'Galaxies beyond our own',
+    query: 'NASA Hubble distant galaxies',
+  },
+  {
+    icon: '🔴',
+    title: 'Mars',
+    subtitle: 'The red planet',
+    query: 'NASA Mars rover landscape',
+  },
+  {
+    icon: '🪐',
+    title: 'Saturn',
+    subtitle: 'A world of rings',
+    query: 'NASA Cassini Saturn rings',
+  },
+  {
+    icon: '✨',
+    title: 'Star Nurseries',
+    subtitle: 'Where stars are born',
+    query: 'Webb telescope Pillars of Creation',
   },
 ];
 
-function SectionHeading({ eyebrow, title, description }) {
-  return (
-    <div className="mb-6 max-w-2xl">
-      <p className="mb-2 text-xs font-extrabold uppercase tracking-[0.25em] text-cyan-300">
-        {eyebrow}
-      </p>
-      <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
-        {title}
-      </h2>
-      <p className="mt-2 leading-7 text-slate-300">{description}</p>
-    </div>
-  );
+function Eyebrow({ children }) {
+  return <p className="sv-eyebrow">{children}</p>;
 }
 
 export default function Home() {
   return (
-    <div className="overflow-hidden text-slate-100">
-      {/* HERO */}
-      <section className="relative isolate mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-20 lg:grid-cols-2 lg:gap-8 lg:px-8">
-        <div
-          className="pointer-events-none absolute inset-0 -z-10"
-          aria-hidden="true"
-          style={{
-            background:
-              'radial-gradient(ellipse at 15% 20%, rgba(34,211,238,.14), transparent 42%), radial-gradient(ellipse at 85% 60%, rgba(124,58,237,.16), transparent 45%)',
-          }}
-        />
+    <div className="sv-home">
+      <div className="sv-ambient sv-ambient-one" aria-hidden="true" />
+      <div className="sv-ambient sv-ambient-two" aria-hidden="true" />
 
-        <div className="relative z-10">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-xs font-bold tracking-wide text-cyan-200">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-300" />
-            YOUR ADVENTURE STARTS HERE
+      {/* CINEMATIC HERO */}
+      <section className="sv-hero">
+        <div className="sv-hero-copy">
+          <div className="sv-status">
+            <span className="sv-status-dot" />
+            THE UNIVERSE IS YOURS TO DISCOVER
           </div>
 
-          <h1 className="max-w-2xl text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl lg:text-7xl">
-            Big questions.
-            <span className="mt-2 block bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">
-              Infinite universe.
-            </span>
+          <Eyebrow>SPACEVERSE ACADEMY / 001</Eyebrow>
+
+          <h1 className="sv-title">
+            Beyond the
+            <br />
+            <span>ordinary.</span>
+            <br />
+            Into the infinite.
           </h1>
 
-          <p className="mt-6 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
-            Discover strange worlds, explore real space imagery, run cosmic
-            experiments, and find out what makes our universe extraordinary.
-            Your journey to the stars begins with curiosity.
+          <p className="sv-hero-description">
+            A universe of discovery awaits. Explore distant worlds, run
+            cosmic experiments, and ask the questions that take you
+            beyond the stars.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              to="/explore"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3 font-extrabold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5 hover:bg-cyan-200"
-            >
-              Explore the universe <span aria-hidden="true">↗</span>
+          <div className="sv-actions">
+            <Link className="sv-button sv-button-primary" to="/explore">
+              Begin your journey <span>↗</span>
             </Link>
-
-            <Link
-              to="/what-if"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 font-bold text-white transition hover:border-violet-300/60 hover:bg-violet-400/10"
-            >
-              <span aria-hidden="true">✦</span> Try What If?
+            <Link className="sv-button sv-button-secondary" to="/what-if">
+              <span>✦</span> What if...?
             </Link>
           </div>
 
-          <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-300">
-            <span>✦ Learn at your own pace</span>
-            <span>✦ Kid-friendly discovery</span>
-            <span>✦ Start for free</span>
+          <div className="sv-hero-note">
+            <span>✳</span> Free space discovery for curious minds
           </div>
         </div>
 
-        {/* PLANETARY SHOWCASE */}
-        <div className="relative mx-auto w-full max-w-xl">
-          <div
-            className="absolute inset-5 rounded-full blur-3xl"
-            aria-hidden="true"
-            style={{
-              background:
-                'radial-gradient(circle, rgba(59,130,246,.25), rgba(124,58,237,.13) 45%, transparent 72%)',
-            }}
-          />
+        {/* CSS 3D PLANET SCENE */}
+        <div className="sv-universe" aria-label="Decorative 3D-style planet scene">
+          <div className="sv-universe-grid" aria-hidden="true" />
+          <div className="sv-starfield sv-starfield-back" aria-hidden="true" />
 
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/75 p-3 shadow-2xl shadow-indigo-950/60 sm:p-5">
-            <div
-              className="relative overflow-hidden rounded-[1.5rem] border border-cyan-200/10 p-3 sm:p-4"
-              style={{
-                background:
-                  'radial-gradient(ellipse at 50% 45%, rgba(30,64,175,.22), transparent 60%), linear-gradient(145deg, #080d24, #101638 60%, #080d24)',
-              }}
-            >
-              <div className="flex items-center justify-between gap-2 px-2 py-2">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-cyan-300">
-                    Live learning zone
-                  </p>
-                  <p className="mt-1 text-sm font-bold text-white">
-                    Our Solar System
-                  </p>
-                </div>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-bold text-slate-300">
-                  ORBIT VIEW
-                </span>
-              </div>
+          <div className="sv-orbit sv-orbit-a" aria-hidden="true" />
+          <div className="sv-orbit sv-orbit-b" aria-hidden="true" />
+          <div className="sv-orbit sv-orbit-c" aria-hidden="true" />
 
-              <div className="relative min-h-[250px] overflow-hidden rounded-2xl sm:min-h-[320px]">
-                <div
-                  className="absolute inset-0"
-                  aria-hidden="true"
-                  style={{
-                    backgroundImage:
-                      'radial-gradient(2px 2px at 15% 25%, #fff 50%, transparent 100%), radial-gradient(1px 1px at 70% 18%, #bae6fd 50%, transparent 100%), radial-gradient(2px 2px at 85% 75%, #fff 50%, transparent 100%), radial-gradient(1px 1px at 30% 80%, #fff 50%, transparent 100%), radial-gradient(1px 1px at 55% 60%, #fff 50%, transparent 100%)',
-                  }}
-                />
-
-                <div className="absolute left-1/2 top-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/10 sm:h-64 sm:w-64" />
-                <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-violet-200/15 sm:h-48 sm:w-48" />
-
-                <div
-                  className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-32 sm:w-32"
-                  aria-label="Illustration of a glowing star"
-                  role="img"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 35% 30%, #fff7c2, #fbbf24 24%, #f97316 54%, #7c2d12 78%)',
-                    boxShadow:
-                      '0 0 35px rgba(251,191,36,.45), 0 0 85px rgba(249,115,22,.2)',
-                  }}
-                />
-
-                <div className="absolute left-[14%] top-[24%] text-2xl sm:text-3xl">
-                  🪐
-                </div>
-                <div className="absolute right-[14%] top-[23%] text-xl sm:text-2xl">
-                  🌍
-                </div>
-                <div className="absolute bottom-[20%] right-[23%] text-lg sm:text-xl">
-                  🌑
-                </div>
-                <div className="absolute bottom-[18%] left-[22%] text-sm text-cyan-100">
-                  ✦
-                </div>
-
-                <div className="absolute bottom-3 left-3 rounded-xl border border-white/10 bg-slate-950/80 px-3 py-2 backdrop-blur">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400">
-                    Mission status
-                  </p>
-                  <p className="mt-1 text-xs font-bold text-emerald-300">
-                    Ready for launch
-                  </p>
-                </div>
-              </div>
-
-              <p className="px-2 pb-2 pt-3 text-center text-xs leading-5 text-slate-400">
-                Explore the real orbital model below. The artwork above is
-                decorative and not a scale-accurate map.
-              </p>
-
-              <div className="mt-2 rounded-2xl border border-white/10 bg-black/20 p-2 sm:p-3">
-                <OrbitView compact selectedId={null} />
-                <Link
-                  to="/explore"
-                  className="mt-2 block rounded-full border border-cyan-300/20 py-2 text-center text-sm font-bold text-cyan-200 transition hover:bg-cyan-300/10"
-                >
-                  Open interactive Solar System →
-                </Link>
-              </div>
-            </div>
+          <div className="sv-planet sv-planet-main" aria-hidden="true">
+            <div className="sv-planet-clouds" />
           </div>
 
-          <div className="absolute -right-2 top-12 hidden rounded-2xl border border-white/10 bg-slate-900/95 px-4 py-3 shadow-xl sm:block">
-            <p className="text-xs text-slate-400">The universe is</p>
-            <p className="text-lg font-black text-white">Full of wonders ✨</p>
+          <div className="sv-planet sv-planet-small" aria-hidden="true" />
+          <div className="sv-planet sv-planet-ringed" aria-hidden="true">
+            <div className="sv-ring" />
+          </div>
+
+          <div className="sv-floating-label sv-label-top">
+            <span className="sv-label-dot" />
+            SECTOR 07 / UNKNOWN
+          </div>
+
+          <div className="sv-floating-label sv-label-bottom">
+            <span className="sv-label-symbol">✦</span>
+            SOMEWHERE, WAITING TO BE DISCOVERED
+          </div>
+
+          <div className="sv-universe-caption">
+            <span>FIG. 01</span>
+            <span>AN INFINITE FRONTIER</span>
           </div>
         </div>
       </section>
 
-      {/* QUICK STATS */}
-      <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-3 rounded-3xl border border-white/10 bg-white/[0.035] p-4 sm:grid-cols-4 sm:p-6">
-          {[
-            ['8', 'Major planets'],
-            ['∞', 'Questions to explore'],
-            ['01', 'Curiosity required'],
-            ['FREE', 'Start learning'],
-          ].map(([number, label]) => (
-            <div key={label} className="p-3 text-center">
-              <p className="text-2xl font-black text-cyan-200 sm:text-3xl">
-                {number}
-              </p>
-              <p className="mt-1 text-xs text-slate-400 sm:text-sm">{label}</p>
-            </div>
-          ))}
+      {/* QUICK INFORMATION STRIP */}
+      <section className="sv-facts" aria-label="Space facts">
+        <div>
+          <span className="sv-fact-number">08</span>
+          <span className="sv-fact-label">Major planets</span>
+        </div>
+        <div>
+          <span className="sv-fact-number">∞</span>
+          <span className="sv-fact-label">Things to discover</span>
+        </div>
+        <div>
+          <span className="sv-fact-number">01</span>
+          <span className="sv-fact-label">Curious mind needed</span>
+        </div>
+        <div className="sv-free-fact">
+          <span className="sv-fact-number">FREE</span>
+          <span className="sv-fact-label">Start exploring today</span>
         </div>
       </section>
 
-      {/* LEARNING ZONES */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="Choose your adventure"
-          title="Your universe. Your discoveries."
-          description="Learn by exploring, experimenting, asking questions, and putting your space knowledge to the test."
-        />
+      {/* LEARNING DESTINATIONS */}
+      <section className="sv-section">
+        <div className="sv-section-heading">
+          <div>
+            <Eyebrow>YOUR NEXT DESTINATION</Eyebrow>
+            <h2>Choose your universe.</h2>
+          </div>
+          <p>
+            Every great discovery begins with one small question.
+            Where will yours take you?
+          </p>
+        </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {learningZones.map((zone, index) => (
+        <div className="sv-destination-grid">
+          {destinations.map((item) => (
             <Link
-              key={zone.title}
-              to={zone.to}
-              className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${zone.color} bg-slate-900/80 p-5 transition duration-300 hover:-translate-y-1 hover:border-cyan-200/40 hover:shadow-xl hover:shadow-cyan-950/30`}
+              className="sv-destination"
+              to={item.route}
+              key={item.number}
             >
-              <div className="mb-6 flex items-start justify-between">
-                <span className="text-4xl" aria-hidden="true">
-                  {zone.icon}
-                </span>
-                <span className="text-sm text-slate-500">
-                  0{index + 1}
-                </span>
+              <div className="sv-card-top">
+                <span className="sv-card-icon">{item.icon}</span>
+                <span className="sv-card-number">{item.number}</span>
               </div>
-
-              <h3 className="text-lg font-extrabold text-white">
-                {zone.title}
-              </h3>
-              <p className="mt-2 min-h-[84px] text-sm leading-6 text-slate-300">
-                {zone.description}
-              </p>
-
-              <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
-                <span className="text-[10px] font-extrabold tracking-widest text-cyan-200">
-                  {zone.tag}
-                </span>
-                <span className="transition group-hover:translate-x-1" aria-hidden="true">
-                  →
-                </span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <div className="sv-card-footer">
+                <span>{item.label}</span>
+                <span className="sv-card-arrow">↗</span>
               </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* DISCOVER SPACE */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="The universe, captured"
-          title="Discover the extraordinary."
-          description="Find real astronomical imagery and explore the wonders captured by space telescopes and robotic explorers."
-        />
+      {/* INTERACTIVE SOLAR SYSTEM */}
+      <section className="sv-section sv-orbit-section">
+        <div className="sv-section-heading">
+          <div>
+            <Eyebrow>OUR COSMIC NEIGHBOURHOOD</Eyebrow>
+            <h2>Worlds in motion.</h2>
+          </div>
+          <Link className="sv-text-link" to="/explore">
+            Open full explorer ↗
+          </Link>
+        </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="sv-orbit-panel">
+          <div className="sv-panel-heading">
+            <div>
+              <span className="sv-panel-overline">LIVE LEARNING MODEL</span>
+              <h3>The Solar System</h3>
+            </div>
+            <span className="sv-panel-tag">INTERACTIVE</span>
+          </div>
+
+          <p className="sv-panel-description">
+            Explore the Sun and eight planets with our simplified
+            orbital model. Select a planet to begin your journey.
+          </p>
+
+          <OrbitView compact selectedId={null} />
+
+          <div className="sv-panel-footer">
+            <span>SIMPLIFIED ORBITS · NOT TO SCALE</span>
+            <Link to="/explore">Explore the planets →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* DISCOVERIES */}
+      <section className="sv-section">
+        <div className="sv-section-heading">
+          <div>
+            <Eyebrow>CAPTURED FROM THE COSMOS</Eyebrow>
+            <h2>The universe, unveiled.</h2>
+          </div>
+          <Link className="sv-text-link" to="/gallery">
+            Visit gallery ↗
+          </Link>
+        </div>
+
+        <div className="sv-discovery-grid">
           {discoveries.map((item, index) => (
             <Link
               key={item.title}
               to={`/gallery?q=${encodeURIComponent(item.query)}`}
-              className="group relative flex min-h-48 flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-5 transition hover:border-violet-300/40 hover:bg-slate-900"
+              className={`sv-discovery sv-discovery-${index + 1}`}
             >
-              <div
-                className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-30 blur-2xl transition group-hover:opacity-60"
-                aria-hidden="true"
-                style={{
-                  background:
-                    index % 2 === 0 ? '#0891b2' : '#7c3aed',
-                }}
-              />
-              <div className="relative">
-                <span className="text-3xl" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <p className="mt-5 text-lg font-extrabold text-white">
-                  {item.title}
-                </p>
-                <p className="mt-1 text-sm text-slate-400">{item.subtitle}</p>
-              </div>
-              <p className="relative mt-5 text-sm font-bold text-cyan-200">
-                Explore discovery <span aria-hidden="true">↗</span>
-              </p>
+              <span className="sv-discovery-icon">{item.icon}</span>
+              <span className="sv-discovery-text">
+                <strong>{item.title}</strong>
+                <small>{item.subtitle}</small>
+              </span>
+              <span className="sv-discovery-arrow">↗</span>
             </Link>
           ))}
-        </div>
-
-        <div className="mt-5">
-          <Link to="/gallery" className="btn-ghost">
-            Browse Space Gallery →
-          </Link>
         </div>
       </section>
 
       {/* QUIZ FEATURE */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div
-          className="relative overflow-hidden rounded-[2rem] border border-indigo-300/20 p-7 sm:p-10 lg:p-12"
-          style={{
-            background:
-              'radial-gradient(ellipse at 100% 0%, rgba(139,92,246,.28), transparent 45%), radial-gradient(ellipse at 0% 100%, rgba(34,211,238,.15), transparent 50%), linear-gradient(125deg, #111633, #101b3c 55%, #17143b)',
-          }}
-        >
-          <div className="relative z-10 grid items-center gap-8 md:grid-cols-[1fr_auto]">
-            <div className="max-w-2xl">
-              <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-cyan-200">
-                Train your cosmic brain
-              </p>
-              <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
-                Ready for the space quiz?
-              </h2>
-              <p className="mt-4 leading-7 text-slate-300">
-                Test what you know about planets, stars, galaxies, and
-                space exploration. Learn something new with every question.
-              </p>
-              <p className="mt-4 text-sm font-semibold text-emerald-300">
-                ✓ Free to start · ✓ Learn while you play
-              </p>
-            </div>
-
-            <Link
-              to="/quiz"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-amber-300 px-7 py-3 font-extrabold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-200"
-            >
-              Enter Quiz Arena →
-            </Link>
-          </div>
-
-          <span
-            className="pointer-events-none absolute -bottom-12 right-10 text-9xl opacity-10"
-            aria-hidden="true"
-          >
-            🚀
-          </span>
+      <section className="sv-quiz-banner">
+        <div className="sv-quiz-art" aria-hidden="true">?</div>
+        <div className="sv-quiz-copy">
+          <Eyebrow>YOUR MIND IS THE MISSION</Eyebrow>
+          <h2>How much of the cosmos do you know?</h2>
+          <p>
+            Challenge yourself with space quizzes. Discover surprising
+            facts and become a little more cosmic with every answer.
+          </p>
         </div>
+        <Link className="sv-button sv-button-primary" to="/quiz">
+          Enter Quiz Arena ↗
+        </Link>
       </section>
 
-      {/* FREE FIRST / PREMIUM LATER */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 lg:px-8">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-3xl border border-emerald-300/20 bg-emerald-300/[0.06] p-6 sm:p-8">
-            <span className="inline-flex rounded-full border border-emerald-200/20 bg-emerald-300/10 px-3 py-1 text-xs font-extrabold text-emerald-200">
-              OPEN FOR EVERYONE
-            </span>
-            <h2 className="mt-4 text-2xl font-black text-white">
-              Start your journey for free.
-            </h2>
-            <p className="mt-3 leading-7 text-slate-300">
-              Explore available learning activities, browse the gallery,
-              and build your curiosity without needing to buy a course.
-            </p>
-            <Link to="/explore" className="mt-5 inline-flex font-bold text-emerald-200 hover:text-emerald-100">
-              Begin exploring →
-            </Link>
-          </div>
-
-          <div className="rounded-3xl border border-violet-300/20 bg-violet-300/[0.06] p-6 sm:p-8">
-            <span className="inline-flex rounded-full border border-violet-200/20 bg-violet-300/10 px-3 py-1 text-xs font-extrabold text-violet-200">
-              FUTURE EXPANSION
-            </span>
-            <h2 className="mt-4 text-2xl font-black text-white">
-              Deeper space courses.
-            </h2>
-            <p className="mt-3 leading-7 text-slate-300">
-              Structured lessons and advanced courses can be added as a
-              future premium offering, while free discovery remains at the heart
-              of SpaceVerse Academy.
-            </p>
-            <p className="mt-5 text-sm font-semibold text-violet-200">
-              Premium courses are not available for purchase yet.
-            </p>
-          </div>
+      {/* FREE-FIRST LEARNING */}
+      <section className="sv-section sv-access-section">
+        <div className="sv-access-card">
+          <span className="sv-access-icon">✦</span>
+          <Eyebrow>OPEN THE DOOR TO SPACE</Eyebrow>
+          <h2>Curiosity should have no launch fee.</h2>
+          <p>
+            Start with free space exploration, learning activities,
+            and discovery. Optional premium courses can be added later
+            without putting the basic learning journey behind a paywall.
+          </p>
+          <Link className="sv-text-link" to="/explore">
+            Start learning for free ↗
+          </Link>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 bg-black/20 px-4 py-8 text-center">
-        <Link to="/" className="text-lg font-black text-white">
-          🪐 SpaceVerse Academy
+      <footer className="sv-footer">
+        <Link className="sv-brand" to="/">
+          <span className="sv-brand-mark">✳</span>
+          SPACEVERSE <span>ACADEMY</span>
         </Link>
-        <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-400">
-          Inspiring the next generation of explorers, scientists, and
-          stargazers—one question at a time.
-        </p>
-        <div className="mt-4 flex flex-wrap justify-center gap-5 text-sm text-slate-300">
-          <Link to="/explore" className="hover:text-cyan-200">Explore</Link>
-          <Link to="/quiz" className="hover:text-cyan-200">Quiz</Link>
-          <Link to="/what-if" className="hover:text-cyan-200">What If?</Link>
-          <Link to="/gallery" className="hover:text-cyan-200">Gallery</Link>
-          <Link to="/credits" className="hover:text-cyan-200">About</Link>
+
+        <p>Made for curious minds and future explorers.</p>
+
+        <div className="sv-footer-links">
+          <Link to="/explore">Explore</Link>
+          <Link to="/quiz">Quiz Arena</Link>
+          <Link to="/missions">Missions</Link>
+          <Link to="/cosmic-lab">Cosmic Lab</Link>
+          <Link to="/what-if">What If?</Link>
+          <Link to="/gallery">Gallery</Link>
+          <Link to="/credits">About</Link>
         </div>
-        <p className="mt-5 text-xs text-slate-500">
-          Keep looking up. The universe is waiting.
-        </p>
+
+        <span className="sv-footer-bottom">
+          KEEP LOOKING UP. THERE IS MORE OUT THERE.
+        </span>
       </footer>
     </div>
   );
+}
+
+/* =========================================
+   SPACEVERSE ACADEMY — CINEMATIC HOMEPAGE
+   ========================================= */
+
+.sv-home {
+  --sv-bg: #050711;
+  --sv-panel: #0b1020;
+  --sv-cyan: #8be9f8;
+  --sv-muted: #a1a9bd;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #f5f7ff;
+  background:
+    radial-gradient(ellipse at 50% 0%, #152044 0%, transparent 45%),
+    #050711;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.sv-home a {
+  text-decoration: none;
+}
+
+.sv-ambient {
+  position: absolute;
+  z-index: -1;
+  width: 28rem;
+  height: 28rem;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .12;
+  pointer-events: none;
+}
+
+.sv-ambient-one {
+  top: 10rem;
+  left: -18rem;
+  background: #06b6d4;
+}
+
+.sv-ambient-two {
+  top: 45rem;
+  right: -18rem;
+  background: #7c3aed;
+}
+
+.sv-hero {
+  width: min(100% - 2.5rem, 1240px);
+  min-height: 650px;
+  margin: auto;
+  padding: 6rem 0 5rem;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  align-items: center;
+  gap: 2rem;
+}
+
+.sv-hero-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.sv-status {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .7rem .9rem;
+  border: 1px solid #ffffff1c;
+  border-radius: 999px;
+  background: #ffffff08;
+  color: #c6d2e9;
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+
+.sv-status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #67e8f9;
+  box-shadow: 0 0 14px #67e8f9;
+  animation: sv-pulse 2s ease-in-out infinite;
+}
+
+.sv-eyebrow {
+  margin: 1.5rem 0 .75rem;
+  color: var(--sv-cyan);
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .24em;
+  line-height: 1.8;
+}
+
+.sv-title {
+  margin: 0;
+  color: #f8fafc;
+  font-size: clamp(2.9rem, 5.5vw, 5.3rem);
+  font-weight: 650;
+  letter-spacing: -.075em;
+  line-height: .99;
+}
+
+.sv-title span {
+  background: linear-gradient(105deg, #f7fbff 5%, #a5e9ff 40%, #a5a4ff 85%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.sv-hero-description {
+  max-width: 490px;
+  margin: 1.5rem 0 0;
+  color: #a9b3c9;
+  font-size: 1rem;
+  line-height: 1.95;
+}
+
+.sv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 2rem;
+}
+
+.sv-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  padding: .8rem 1.2rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 800;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.sv-button:hover {
+  transform: translateY(-3px);
+}
+
+.sv-button-primary {
+  border: 1px solid #a5f3fc;
+  background: #a5f3fc;
+  color: #07111d !important;
+  box-shadow: 0 8px 30px #22d3ee20;
+}
+
+.sv-button-primary:hover {
+  background: #cffafe;
+}
+
+.sv-button-secondary {
+  border: 1px solid #ffffff24;
+  background: #ffffff06;
+  color: #f1f5f9 !important;
+}
+
+.sv-button-secondary:hover {
+  border-color: #a5f3fc80;
+  background: #67e8f912;
+}
+
+.sv-hero-note {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-top: 2rem;
+  color: #8d9ab3;
+  font-size: .76rem;
+}
+
+.sv-hero-note span {
+  color: var(--sv-cyan);
+}
+
+/* Cinematic planet composition */
+
+.sv-universe {
+  position: relative;
+  min-width: 0;
+  min-height: 520px;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.sv-universe-grid {
+  position: absolute;
+  inset: 12% -10% 0;
+  opacity: .22;
+  transform: perspective(450px) rotateX(64deg) scale(1.25);
+  transform-origin: center bottom;
+  background-image:
+    linear-gradient(#6478ae30 1px, transparent 1px),
+    linear-gradient(90deg, #6478ae30 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: linear-gradient(transparent, black 45%, transparent);
+}
+
+.sv-starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #fff 99%, transparent),
+    radial-gradient(2px 2px at 77% 17%, #a5f3fc 99%, transparent),
+    radial-gradient(1px 1px at 88% 58%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 26% 78%, #fff 99%, transparent),
+    radial-gradient(2px 2px at 59% 87%, #c4b5fd 99%, transparent),
+    radial-gradient(1px 1px at 48% 25%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 92% 32%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 10% 55%, #bae6fd 99%, transparent);
+  background-size: 100% 100%;
+}
+
+.sv-orbit {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  border: 1px solid #9bb7ff25;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.sv-orbit-a {
+  width: 390px;
+  height: 160px;
+  transform: translate(-50%, -50%) rotate(-28deg) rotateX(59deg);
+}
+
+.sv-orbit-b {
+  width: 460px;
+  height: 235px;
+  transform: translate(-50%, -50%) rotate(32deg) rotateX(61deg);
+}
+
+.sv-orbit-c {
+  width: 330px;
+  height: 360px;
+  border-color: #67e8f916;
+  transform: translate(-50%, -50%) rotate(47deg) rotateY(58deg);
+}
+
+.sv-planet {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.sv-planet-main {
+  width: clamp(180px, 24vw, 280px);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(ellipse at 28% 22%, #d3f7ff 0%, transparent 10%),
+    radial-gradient(ellipse at 35% 30%, #65c9db 0%, #247fae 26%, #17406f 55%, #09132d 78%, #030611 100%);
+  box-shadow:
+    inset -35px -20px 55px #02040e,
+    inset 10px 8px 22px #c8f6ff55,
+    0 0 38px #2684ca36,
+    0 0 110px #4f46e51e;
+  transform: translate(-50%, -50%) translateZ(35px);
+  animation: sv-float 7s ease-in-out infinite;
+}
+
+.sv-planet-clouds {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  opacity: .65;
+  background:
+    repeating-linear-gradient(
+      163deg,
+      transparent 0 15px,
+      #d5f8ff1a 16px 19px,
+      transparent 20px 35px
+    );
+  mask-image: radial-gradient(circle at 35% 35%, black, transparent 72%);
+}
+
+.sv-planet-small {
+  top: 25%;
+  left: 77%;
+  width: 47px;
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 30% 25%, #ffe3b5, #d98c58 48%, #46284a 83%, #100b20);
+  box-shadow: inset -8px -4px 10px #130b23, 0 0 35px #f59e0b26;
+  transform: translateZ(70px);
+  animation: sv-float-small 5s ease-in-out infinite;
+}
+
+.sv-planet-ringed {
+  top: 72%;
+  left: 21%;
+  width: 64px;
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 30% 25%, #f5d6a0, #9f784e 54%, #28203a 88%);
+  box-shadow: inset -10px -4px 12px #090814;
+  transform: translateZ(60px);
+  animation: sv-float-small 6s ease-in-out infinite reverse;
+}
+
+.sv-ring {
+  position: absolute;
+  width: 155%;
+  height: 38%;
+  top: 32%;
+  left: -27%;
+  border: 7px solid #e8cda6b0;
+  border-left-color: #d8b88a50;
+  border-right-color: #f4dfb76b;
+  border-radius: 50%;
+  transform: rotate(-24deg);
+  box-shadow: 0 0 12px #e9cfa422;
+}
+
+.sv-floating-label {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .7rem .8rem;
+  border: 1px solid #ffffff19;
+  border-radius: 8px;
+  background: #070b19c9;
+  color: #bac6df;
+  font-size: .57rem;
+  letter-spacing: .1em;
+  backdrop-filter: blur(12px);
+}
+
+.sv-label-top {
+  top: 14%;
+  left: 3%;
+}
+
+.sv-label-bottom {
+  right: 1%;
+  bottom: 15%;
+  max-width: 240px;
+}
+
+.sv-label-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #67e8f9;
+  box-shadow: 0 0 10px #67e8f9;
+}
+
+.sv-label-symbol {
+  color: #c4b5fd;
+  font-size: .9rem;
+}
+
+.sv-universe-caption {
+  position: absolute;
+  bottom: 3%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  border-top: 1px solid #ffffff18;
+  padding-top: .9rem;
+  color: #71809e;
+  font-size: .6rem;
+  letter-spacing: .14em;
+}
+
+/* Facts strip */
+
+.sv-facts {
+  width: min(100% - 2.5rem, 1240px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid #ffffff17;
+  border-bottom: 1px solid #ffffff17;
+  padding: 1.7rem 0;
+}
+
+.sv-facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  padding: .4rem 1.4rem;
+  border-right: 1px solid #ffffff13;
+}
+
+.sv-facts > div:first-child {
+  padding-left: 0;
+}
+
+.sv-facts > div:last-child {
+  border-right: 0;
+}
+
+.sv-fact-number {
+  color: #f2f6ff;
+  font-size: 1.7rem;
+  font-weight: 650;
+  letter-spacing: -.06em;
+}
+
+.sv-free-fact .sv-fact-number {
+  color: var(--sv-cyan);
+  font-size: 1.4rem;
+}
+
+.sv-fact-label {
+  color: #8d9ab3;
+  font-size: .75rem;
+}
+
+/* Shared section styles */
+
+.sv-section {
+  width: min(100% - 2.5rem, 1240px);
+  margin: 0 auto;
+  padding: 6rem 0 1rem;
+}
+
+.sv-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.sv-section-heading .sv-eyebrow {
+  margin-top: 0;
+}
+
+.sv-section-heading h2,
+.sv-access-card h2,
+.sv-quiz-copy h2 {
+  margin: 0;
+  color: #f5f7ff;
+  font-size: clamp(1.8rem, 3.4vw, 3rem);
+  font-weight: 650;
+  letter-spacing: -.055em;
+  line-height: 1.15;
+}
+
+.sv-section-heading > p {
+  max-width: 370px;
+  margin: 0;
+  color: #929db4;
+  font-size: .9rem;
+  line-height: 1.8;
+}
+
+.sv-text-link {
+  color: var(--sv-cyan) !important;
+  font-size: .8rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.sv-text-link:hover {
+  color: white !important;
+}
+
+/* Destination cards */
+
+.sv-destination-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.sv-destination {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.35rem;
+  border: 1px solid #ffffff14;
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at 90% 0%, #5b75a01c, transparent 55%),
+    #ffffff04;
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+}
+
+.sv-destination:hover {
+  transform: translateY(-5px);
+  border-color: #8be9f84d;
+  background-color: #a5f3fc08;
+}
+
+.sv-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.2rem;
+}
+
+.sv-card-icon {
+  font-size: 2rem;
+}
+
+.sv-card-number {
+  color: #62718d;
+  font-size: .7rem;
+  letter-spacing: .15em;
+}
+
+.sv-destination h3 {
+  margin: 0;
+  color: #f5f7ff;
+  font-size: 1.08rem;
+  font-weight: 750;
+}
+
+.sv-destination > p {
+  min-height: 84px;
+  margin: .7rem 0 1.2rem;
+  color: #98a4ba;
+  font-size: .82rem;
+  line-height: 1.8;
+}
+
+.sv-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-top: auto;
+  border-top: 1px solid #ffffff15;
+  padding-top: 1rem;
+  color: #9feaf8;
+  font-size: .61rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.sv-card-arrow {
+  font-size: 1rem;
+  transition: transform .2s ease;
+}
+
+.sv-destination:hover .sv-card-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* Orbit panel */
+
+.sv-orbit-section {
+  padding-top: 7rem;
+}
+
+.sv-orbit-panel {
+  overflow: hidden;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid #ffffff17;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 25%, #1b2b5530, transparent 60%),
+    #090d1a;
+}
+
+.sv-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sv-panel-overline {
+  color: #93a3c0;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+}
+
+.sv-panel-heading h3 {
+  margin: .4rem 0 0;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 750;
+}
+
+.sv-panel-tag {
+  border: 1px solid #67e8f93b;
+  border-radius: 999px;
+  padding: .5rem .7rem;
+  color: #a5f3fc;
+  font-size: .6rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.sv-panel-description {
+  max-width: 650px;
+  margin: 1rem 0 1.5rem;
+  color: #98a4ba;
+  font-size: .88rem;
+  line-height: 1.8;
+}
+
+.sv-orbit-panel > section {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.sv-orbit-panel > section > div {
+  border-color: #ffffff12;
+  background-color: #050916;
+}
+
+.sv-panel-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #ffffff12;
+  padding-top: 1rem;
+  color: #7e8ba5;
+  font-size: .62rem;
+  letter-spacing: .1em;
+}
+
+.sv-panel-footer a {
+  color: #a5f3fc;
+  font-size: .75rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+/* Discovery cards */
+
+.sv-discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .8rem;
+}
+
+.sv-discovery {
+  position: relative;
+  display: flex;
+  min-height: 160px;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 1.2rem;
+  border: 1px solid #ffffff14;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #101b35, #090c19);
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.sv-discovery::after {
+  position: absolute;
+  right: -25px;
+  top: -35px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #6366f125;
+  content: "";
+  filter: blur(20px);
+}
+
+.sv-discovery-2::after {
+  background: #f9731625;
+}
+
+.sv-discovery-3::after {
+  background: #fbbf2425;
+}
+
+.sv-discovery-4::after {
+  background: #22d3ee25;
+}
+
+.sv-discovery:hover {
+  transform: translateY(-4px);
+  border-color: #a5f3fc55;
+}
+
+.sv-discovery-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 1.7rem;
+}
+
+.sv-discovery-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.sv-discovery-text strong {
+  color: #f5f7ff;
+  font-size: .95rem;
+}
+
+.sv-discovery-text small {
+  color: #98a4ba;
+  font-size: .75rem;
+}
+
+.sv-discovery-arrow {
+  position: absolute;
+  right: 1rem;
+  bottom: 1.1rem;
+  color: #a5f3fc;
+}
+
+/* Quiz banner */
+
+.sv-quiz-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: min(100% - 2.5rem, 1240px);
+  margin: 7rem auto 0;
+  overflow: hidden;
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  border: 1px solid #a5b4fc30;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 100% 0%, #8b5cf62a, transparent 45%),
+    linear-gradient(110deg, #0d1830, #13132a);
+}
+
+.sv-quiz-copy {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.sv-quiz-copy .sv-eyebrow {
+  margin-top: 0;
+}
+
+.sv-quiz-copy h2 {
+  max-width: 600px;
+}
+
+.sv-quiz-copy > p {
+  max-width: 600px;
+  margin: 1rem 0 0;
+  color: #a8b2c8;
+  font-size: .9rem;
+  line-height: 1.85;
+}
+
+.sv-quiz-art {
+  position: absolute;
+  right: 30%;
+  top: -50%;
+  color: #a5b4fc0b;
+  font-size: 23rem;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.sv-quiz-banner > .sv-button {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* Free learning */
+
+.sv-access-section {
+  padding-top: 5rem;
+  padding-bottom: 6rem;
+}
+
+.sv-access-card {
+  max-width: 780px;
+  margin: auto;
+  text-align: center;
+}
+
+.sv-access-icon {
+  display: inline-grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border: 1px solid #67e8f94d;
+  border-radius: 16px;
+  background: #67e8f90d;
+  color: #a5f3fc;
+  font-size: 1.5rem;
+}
+
+.sv-access-card .sv-eyebrow {
+  margin-top: 1.5rem;
+}
+
+.sv-access-card h2 {
+  max-width: 650px;
+  margin: auto;
+}
+
+.sv-access-card > p {
+  max-width: 620px;
+  margin: 1.2rem auto;
+  color: #a0abc1;
+  font-size: .9rem;
+  line-height: 1.9;
+}
+
+/* Footer */
+
+.sv-footer {
+  border-top: 1px solid #ffffff16;
+  padding: 2.5rem 1.25rem;
+  text-align: center;
+  background: #03050c8c;
+}
+
+.sv-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  color: #f5f7ff !important;
+  font-size: .95rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.sv-brand > span:last-child {
+  color: #9caac3;
+  font-weight: 500;
+}
+
+.sv-brand-mark {
+  color: #a5f3fc;
+  font-size: 1.5rem;
+}
+
+.sv-footer > p {
+  margin: .8rem 0 1.2rem;
+  color: #8e9ab2;
+  font-size: .8rem;
+}
+
+.sv-footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+
+.sv-footer-links a {
+  color: #b4bfd2;
+  font-size: .75rem;
+}
+
+.sv-footer-links a:hover {
+  color: #a5f3fc;
+}
+
+.sv-footer-bottom {
+  display: block;
+  margin-top: 2rem;
+  color: #68758f;
+  font-size: .58rem;
+  letter-spacing: .2em;
+}
+
+/* Animations */
+
+@keyframes sv-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+
+@keyframes sv-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -10px; }
+}
+
+@keyframes sv-float-small {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -9px; }
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .sv-hero {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-top: 4.5rem;
+  }
+
+  .sv-hero-copy {
+    max-width: 700px;
+  }
+
+  .sv-universe {
+    width: 100%;
+    max-width: 650px;
+    min-height: 480px;
+    margin: 0 auto;
+  }
+
+  .sv-title {
+    font-size: clamp(3rem, 9vw, 5.2rem);
+  }
+
+  .sv-destination-grid,
+  .sv-discovery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sv-destination > p {
+    min-height: 0;
+  }
+
+  .sv-quiz-banner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sv-quiz-art {
+    right: 5%;
+    top: -25%;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 560px) {
+  .sv-hero,
+  .sv-section,
+  .sv-facts,
+  .sv-quiz-banner {
+    width: calc(100% - 2rem);
+  }
+
+  .sv-hero {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .sv-status {
+    font-size: .54rem;
+    letter-spacing: .08em;
+  }
+
+  .sv-title {
+    font-size: clamp(2.8rem, 13vw, 4.2rem);
+  }
+
+  .sv-hero-description {
+    font-size: .9rem;
+    line-height: 1.8;
+  }
+
+  .sv-actions {
+    align-items: stretch;
+  }
+
+  .sv-button {
+    font-size: .78rem;
+    padding: .75rem .9rem;
+  }
+
+  .sv-universe {
+    min-height: 365px;
+  }
+
+  .sv-planet-main {
+    width: 180px;
+  }
+
+  .sv-planet-small {
+    width: 34px;
+  }
+
+  .sv-planet-ringed {
+    width: 45px;
+  }
+
+  .sv-ring {
+    border-width: 5px;
+  }
+
+  .sv-orbit-a {
+    width: 280px;
+    height: 125px;
+  }
+
+  .sv-orbit-b {
+    width: 320px;
+    height: 185px;
+  }
+
+  .sv-orbit-c {
+    width: 250px;
+    height: 290px;
+  }
+
+  .sv-floating-label {
+    padding: .55rem;
+    font-size: .47rem;
+  }
+
+  .sv-label-bottom {
+    max-width: 190px;
+  }
+
+  .sv-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: .7rem 0;
+  }
+
+  .sv-facts > div {
+    padding: 1rem .7rem;
+    border-bottom: 1px solid #ffffff13;
+  }
+
+  .sv-facts > div:first-child {
+    padding-left: .7rem;
+  }
+
+  .sv-facts > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .sv-facts > div:nth-child(3),
+  .sv-facts > div:nth-child(4) {
+    border-bottom: 0;
+  }
+
+  .sv-fact-number {
+    font-size: 1.5rem;
+  }
+
+  .sv-section {
+    padding-top: 4rem;
+  }
+
+  .sv-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .9rem;
+  }
+
+  .sv-section-heading h2,
+  .sv-access-card h2,
+  .sv-quiz-copy h2 {
+    font-size: 2rem;
+  }
+
+  .sv-destination-grid {
+    gap: .7rem;
+  }
+
+  .sv-destination {
+    padding: 1rem;
+  }
+
+  .sv-card-top {
+    margin-bottom: 1.4rem;
+  }
+
+  .sv-card-icon {
+    font-size: 1.6rem;
+  }
+
+  .sv-destination h3 {
+    font-size: .95rem;
+  }
+
+  .sv-destination > p {
+    font-size: .77rem;
+  }
+
+  .sv-card-footer {
+    font-size: .52rem;
+  }
+
+  .sv-discovery-grid {
+    gap: .7rem;
+  }
+
+  .sv-discovery {
+    min-height: 145px;
+    padding: .9rem;
+  }
+
+  .sv-discovery-text strong {
+    font-size: .85rem;
+  }
+
+  .sv-discovery-text small {
+    font-size: .68rem;
+  }
+
+  .sv-quiz-banner {
+    margin-top: 4rem;
+    padding: 1.4rem;
+  }
+
+  .sv-quiz-banner > .sv-button {
+    width: 100%;
+  }
+
+  .sv-quiz-art {
+    right: -5%;
+    top: -10%;
+    font-size: 15rem;
+  }
+
+  .sv-access-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .sv-footer-links {
+    gap: .8rem 1rem;
+  }
+}
+
+/* Respect accessibility preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-home *,
+  .sv-home *::before,
+  .sv-home *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
 }
