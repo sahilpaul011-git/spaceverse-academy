@@ -40,11 +40,11 @@ body {
 }
 
 .btn-primary {
-  @apply btn bg-sun text-space-950 hover:brightness-110;
+  @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-5 py-2 font-bold transition bg-sun text-space-950 hover:brightness-110;
 }
 
 .btn-ghost {
-  @apply btn border border-cyan-400/60 text-cyan-300 hover:bg-cyan-400/10;
+  @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-5 py-2 font-bold transition border border-cyan-400/60 text-cyan-300 hover:bg-cyan-400/10;
 }
 
 .skeleton {
