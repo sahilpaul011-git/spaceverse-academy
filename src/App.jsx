@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 
 import AdminCourseManager from './pages/AdminCourseManager';
+import AdminQuizManager from './pages/AdminQuizManager';
 import CoursePlayer from './pages/CoursePlayer';
 import Certificates from './pages/Certificates';
 
@@ -25,7 +26,6 @@ import WhatIfSimulator from './pages/WhatIfSimulator';
 import Auth from './pages/Auth';
 import Courses from './pages/Courses';
 import AdminDashboard from './pages/AdminDashboard';
-import AdminQuizManager from './pages/AdminQuizManager';
 
 import { useAuth } from './context/AuthContext';
 
@@ -207,6 +207,13 @@ function ProtectedDashboard() {
                   title="Course & Lesson Manager"
                   description="Create lessons, add videos and manage course content."
                 />
+
+                <DashboardLink
+                  to="/admin-quizzes"
+                  icon="🧠"
+                  title="Lesson Quiz Manager"
+                  description="Create lesson quizzes, manage questions and review student results."
+                />
               </>
             )}
 
@@ -253,7 +260,7 @@ function ProtectedDashboard() {
 
             <p className="mt-2 text-sm leading-6 text-slate-400">
               Access your administration tools to manage learning resources,
-              lessons and marketplace activity.
+              lessons, quizzes and marketplace activity.
             </p>
 
             <div className="mt-5 flex flex-wrap gap-3">
@@ -269,6 +276,13 @@ function ProtectedDashboard() {
                 className="inline-flex rounded-xl border border-purple-300/30 px-5 py-3 font-bold text-purple-200 hover:bg-purple-400/10"
               >
                 Manage Lessons →
+              </Link>
+
+              <Link
+                to="/admin-quizzes"
+                className="inline-flex rounded-xl border border-purple-300/30 px-5 py-3 font-bold text-purple-200 hover:bg-purple-400/10"
+              >
+                Manage Lesson Quizzes →
               </Link>
             </div>
           </div>
@@ -366,10 +380,11 @@ export default function App() {
             path="/admin-lessons"
             element={<AdminCourseManager />}
           />
-<Route
-  path="/admin-quizzes"
-  element={<AdminQuizManager />}
-/>
+
+          <Route
+            path="/admin-quizzes"
+            element={<AdminQuizManager />}
+          />
 
           <Route path="/courses" element={<Courses />} />
 
