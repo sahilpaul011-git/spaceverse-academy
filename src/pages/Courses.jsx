@@ -10,6 +10,8 @@ const icons = {
   Astronomy: '🌌',
   'Planet Science': '🪐',
   'Space Technology': '🚀',
+  'Space Science': '🔭',
+  'Earth Science': '🌍',
 };
 
 export default function Courses() {
@@ -17,12 +19,15 @@ export default function Courses() {
   const navigate = useNavigate();
 
   const [courses, setCourses] = useState([]);
+  const [externalCourses, setExternalCourses] = useState([]);
   const [enrolledIds, setEnrolledIds] = useState([]);
   const [category, setCategory] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [externalLoading, setExternalLoading] = useState(true);
   const [enrollingId, setEnrollingId] = useState(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [externalError, setExternalError] = useState('');
 
   async function loadCourses() {
     setLoading(true);
@@ -31,6 +36,7 @@ export default function Courses() {
     if (!supabase) {
       setError('Course catalogue is temporarily unavailable. Please try again later.');
       setLoading(false);
+      setExternalLoading(false);
       return;
     }
 
@@ -66,8 +72,40 @@ export default function Courses() {
     }
   }
 
+  async function loadExternalCourses() {
+    setExternalLoading(true);
+    setExternalError('');
+
+    if (!supabase) {
+      setExternalError('External learning resources are unavailable.');
+      setExternalLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error: externalCourseError } = await supabase
+        .from('external_courses')
+        .select(
+          'id, title, description, provider, category, level, course_url, affiliate_url, affiliate_status, commission_rate, price_type'
+        )
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (externalCourseError) throw externalCourseError;
+
+      setExternalCourses(data || []);
+    } catch (err) {
+      setExternalError(
+        'External resources could not be loaded. Please check the marketplace database setup.'
+      );
+    } finally {
+      setExternalLoading(false);
+    }
+  }
+
   useEffect(() => {
     loadCourses();
+    loadExternalCourses();
   }, [user?.id]);
 
   const visibleCourses = useMemo(() => {
@@ -121,6 +159,37 @@ export default function Courses() {
     }
   }
 
+  async function trackExternalClick(course) {
+    if (!supabase || !user) return;
+
+    try {
+      await supabase.from('affiliate_clicks').insert({
+        external_course_id: course.id,
+        user_id: user.id,
+      });
+    } catch (err) {
+      // Tracking errors should never prevent opening the provider website.
+      console.error('External click tracking failed:', err);
+    }
+  }
+
+  function getExternalUrl(course) {
+    if (
+      course.affiliate_status === 'approved' &&
+      course.affiliate_url
+    ) {
+      return course.affiliate_url;
+    }
+
+    return course.course_url;
+  }
+
+  function getPriceLabel(type) {
+    if (type === 'free') return 'FREE';
+    if (type === 'paid') return 'PAID';
+    return 'FREE / PAID OPTIONS';
+  }
+
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-12 text-white sm:px-6">
       <div className="mx-auto max-w-6xl">
@@ -138,17 +207,17 @@ export default function Courses() {
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-              Explore space science through exciting courses designed
-              for curious minds. Start with free learning and grow
-              your knowledge one mission at a time.
+              Explore space science through exciting courses and
+              educational resources. Start with free learning and
+              grow your knowledge one mission at a time.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold">
               <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-emerald-300">
-                ✓ Free courses available
+                ✓ Free learning available
               </span>
               <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-cyan-300">
-                ✦ Learn at your own pace
+                ✦ Global learning resources
               </span>
             </div>
           </div>
@@ -158,10 +227,10 @@ export default function Courses() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
-                Course catalogue
+                SpaceVerse courses
               </p>
               <h2 className="mt-2 text-2xl font-black sm:text-3xl">
-                Find your next adventure
+                Learn inside SpaceVerse
               </h2>
             </div>
 
@@ -210,7 +279,7 @@ export default function Courses() {
 
           {loading ? (
             <div className="py-20 text-center text-cyan-300">
-              Loading courses from SpaceVerse...
+              Loading SpaceVerse courses...
             </div>
           ) : visibleCourses.length === 0 ? (
             <div className="mt-8 rounded-2xl border border-dashed border-white/15 bg-slate-900/60 p-10 text-center">
@@ -303,6 +372,126 @@ export default function Courses() {
             </div>
           )}
         </section>
+
+        <section className="mt-16 border-t border-white/10 pt-10">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-300">
+              Global learning marketplace
+            </p>
+            <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+              Explore courses beyond SpaceVerse
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400">
+              Discover learning opportunities from space agencies,
+              universities and education platforms around the world.
+              These courses are hosted by their respective providers.
+            </p>
+          </div>
+
+          {externalError && (
+            <div
+              role="alert"
+              className="mt-6 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-200"
+            >
+              {externalError}
+            </div>
+          )}
+
+          {externalLoading ? (
+            <div className="py-16 text-center text-purple-300">
+              Loading global learning resources...
+            </div>
+          ) : externalCourses.length === 0 ? (
+            <div className="mt-8 rounded-2xl border border-dashed border-white/15 bg-slate-900/60 p-8 text-center">
+              <div className="text-4xl">🌍</div>
+              <h3 className="mt-3 text-lg font-bold">
+                No external resources available
+              </h3>
+              <p className="mt-2 text-sm text-slate-400">
+                Published provider resources will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {externalCourses.map((course) => {
+                const approvedAffiliate =
+                  course.affiliate_status === 'approved' &&
+                  Boolean(course.affiliate_url);
+
+                return (
+                  <article
+                    key={course.id}
+                    className="flex flex-col rounded-2xl border border-purple-400/20 bg-gradient-to-b from-slate-900 to-slate-950 p-5 transition hover:border-purple-300/50"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-3xl">
+                        {icons[course.category] || '🛰️'}
+                      </span>
+                      <span className="rounded-full bg-purple-400/10 px-3 py-1 text-xs font-bold text-purple-200">
+                        {getPriceLabel(course.price_type)}
+                      </span>
+                    </div>
+
+                    <p className="mt-5 text-xs font-bold uppercase tracking-wider text-purple-300">
+                      {course.provider}
+                    </p>
+
+                    <h3 className="mt-2 text-xl font-bold">
+                      {course.title}
+                    </h3>
+
+                    <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">
+                      {course.description}
+                    </p>
+
+                    <div className="mt-5 flex flex-wrap gap-2 text-xs text-slate-400">
+                      <span className="rounded-full bg-white/5 px-3 py-1">
+                        {course.category}
+                      </span>
+                      <span className="rounded-full bg-white/5 px-3 py-1">
+                        {course.level}
+                      </span>
+                    </div>
+
+                    <a
+                      href={getExternalUrl(course)}
+                      target="_blank"
+                      rel={
+                        approvedAffiliate
+                          ? 'sponsored noopener noreferrer'
+                          : 'noopener noreferrer'
+                      }
+                      onClick={() => trackExternalClick(course)}
+                      className="mt-6 inline-flex items-center justify-center rounded-xl border border-purple-400/40 bg-purple-400/10 px-4 py-3 text-sm font-bold text-purple-200 transition hover:bg-purple-400/20"
+                    >
+                      Visit provider website ↗
+                    </a>
+
+                    {approvedAffiliate && (
+                      <p className="mt-3 text-xs leading-5 text-slate-500">
+                        Affiliate link: SpaceVerse may earn a commission
+                        from eligible purchases.
+                      </p>
+                    )}
+
+                    {!approvedAffiliate && (
+                      <p className="mt-3 text-xs text-slate-500">
+                        External provider website. Course details and
+                        pricing are controlled by the provider.
+                      </p>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        <p className="mt-10 text-center text-xs leading-6 text-slate-500">
+          SpaceVerse Academy is an independent learning platform.
+          External courses are provided by third-party organisations.
+          Their availability, fees and terms may change.
+        </p>
       </div>
     </main>
   );
