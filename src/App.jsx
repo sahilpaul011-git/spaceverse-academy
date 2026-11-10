@@ -25,6 +25,7 @@ import WhatIfSimulator from './pages/WhatIfSimulator';
 import Auth from './pages/Auth';
 import Courses from './pages/Courses';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminQuizManager from './pages/AdminQuizManager';
 
 import { useAuth } from './context/AuthContext';
 
@@ -365,6 +366,10 @@ export default function App() {
             path="/admin-lessons"
             element={<AdminCourseManager />}
           />
+<Route
+  path="/admin-quizzes"
+  element={<AdminQuizManager />}
+/>
 
           <Route path="/courses" element={<Courses />} />
 
