@@ -39,9 +39,7 @@ export default function Courses() {
     setError('');
 
     if (!supabase) {
-      setError(
-        'Course catalogue is temporarily unavailable. Please try again later.'
-      );
+      setError('Course catalogue is temporarily unavailable. Please try again later.');
       setLoading(false);
       setExternalLoading(false);
       return;
@@ -51,7 +49,7 @@ export default function Courses() {
       const { data, error: courseError } = await supabase
         .from('courses')
         .select(
-          'id, title, description, category, level, price, is_free, is_published, duration_minutes'
+          'id, title, description, category, level, price, is_free, is_published, duration_minutes, thumbnail'
         )
         .eq('is_published', true)
         .order('created_at', { ascending: false });
@@ -69,9 +67,7 @@ export default function Courses() {
 
         if (enrolmentError) throw enrolmentError;
 
-        setEnrolledIds(
-          (enrolments || []).map((item) => item.course_id)
-        );
+        setEnrolledIds((enrolments || []).map((item) => item.course_id));
       } else {
         setEnrolledIds([]);
       }
@@ -104,7 +100,7 @@ export default function Courses() {
       if (externalCourseError) throw externalCourseError;
 
       setExternalCourses(data || []);
-    } catch (err) {
+    } catch {
       setExternalError(
         'External resources could not be loaded. Please check the marketplace database setup.'
       );
@@ -120,10 +116,7 @@ export default function Courses() {
 
   const visibleCourses = useMemo(() => {
     if (category === 'All') return courses;
-
-    return courses.filter(
-      (course) => course.category === category
-    );
+    return courses.filter((course) => course.category === category);
   }, [courses, category]);
 
   async function handleEnroll(course) {
@@ -162,20 +155,15 @@ export default function Courses() {
       if (enrolmentError) {
         if (enrolmentError.code === '23505') {
           setEnrolledIds((current) =>
-            current.includes(course.id)
-              ? current
-              : [...current, course.id]
+            current.includes(course.id) ? current : [...current, course.id]
           );
-
           setMessage('You are already enrolled in this course.');
         } else {
           throw enrolmentError;
         }
       } else {
         setEnrolledIds((current) => [...current, course.id]);
-        setMessage(
-          `Successfully enrolled in ${course.title}!`
-        );
+        setMessage(`Successfully enrolled in ${course.title}!`);
       }
     } catch (err) {
       setError(err.message || 'Could not enrol in this course.');
@@ -198,20 +186,15 @@ export default function Courses() {
   }
 
   function getExternalUrl(course) {
-    if (
-      course.affiliate_status === 'approved' &&
-      course.affiliate_url
-    ) {
+    if (course.affiliate_status === 'approved' && course.affiliate_url) {
       return course.affiliate_url;
     }
-
     return course.course_url;
   }
 
   function getPriceLabel(type) {
     if (type === 'free') return 'FREE';
     if (type === 'paid') return 'PAID';
-
     return 'FREE / PAID OPTIONS';
   }
 
@@ -219,7 +202,6 @@ export default function Courses() {
     <main className="min-h-screen bg-slate-950 px-4 py-12 text-white sm:px-6">
       <div className="mx-auto max-w-6xl">
 
-        {/* HERO SECTION */}
         <section className="relative overflow-hidden rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 p-7 sm:p-10">
           <div className="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
@@ -242,7 +224,6 @@ export default function Courses() {
               <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-emerald-300">
                 ✓ Free learning available
               </span>
-
               <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-cyan-300">
                 ✦ Global learning resources
               </span>
@@ -250,28 +231,22 @@ export default function Courses() {
           </div>
         </section>
 
-        {/* INTERNAL COURSES */}
         <section className="mt-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
                 SpaceVerse courses
               </p>
-
               <h2 className="mt-2 text-2xl font-black sm:text-3xl">
                 Learn inside SpaceVerse
               </h2>
             </div>
 
-            <Link
-              to="/dashboard"
-              className="text-sm font-semibold text-cyan-300 hover:text-cyan-200"
-            >
+            <Link to="/dashboard" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">
               My dashboard →
             </Link>
           </div>
 
-          {/* CATEGORY FILTERS */}
           <div className="mt-6 flex flex-wrap gap-2">
             {categories.map((item) => (
               <button
@@ -289,27 +264,18 @@ export default function Courses() {
             ))}
           </div>
 
-          {/* SUCCESS MESSAGE */}
           {message && (
-            <div
-              role="status"
-              className="mt-5 rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm text-emerald-300"
-            >
+            <div role="status" className="mt-5 rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm text-emerald-300">
               {message}
             </div>
           )}
 
-          {/* ERROR MESSAGE */}
           {error && (
-            <div
-              role="alert"
-              className="mt-5 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-300"
-            >
+            <div role="alert" className="mt-5 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-300">
               {error}
             </div>
           )}
 
-          {/* COURSE LIST */}
           {loading ? (
             <div className="py-20 text-center text-cyan-300">
               Loading SpaceVerse courses...
@@ -317,11 +283,7 @@ export default function Courses() {
           ) : visibleCourses.length === 0 ? (
             <div className="mt-8 rounded-2xl border border-dashed border-white/15 bg-slate-900/60 p-10 text-center">
               <div className="text-4xl">🔭</div>
-
-              <h3 className="mt-4 text-xl font-bold">
-                No courses found
-              </h3>
-
+              <h3 className="mt-4 text-xl font-bold">No courses found</h3>
               <p className="mt-2 text-sm text-slate-400">
                 There are no published courses in this category yet.
               </p>
@@ -330,19 +292,37 @@ export default function Courses() {
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {visibleCourses.map((course) => {
                 const enrolled = enrolledIds.includes(course.id);
-
-                const free =
-                  course.is_free && Number(course.price) === 0;
+                const free = course.is_free && Number(course.price) === 0;
 
                 return (
                   <article
                     key={course.id}
                     className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900 transition hover:-translate-y-1 hover:border-cyan-400/40"
                   >
-                    <div className="flex min-h-36 items-center justify-center bg-gradient-to-br from-indigo-950 via-slate-800 to-slate-950">
-                      <span className="text-6xl">
-                        {icons[course.category] || '✨'}
-                      </span>
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-800 to-slate-950">
+                      {course.thumbnail ? (
+                        <img
+                          src={course.thumbnail}
+                          alt={`${course.title} course cover`}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition duration-500 hover:scale-105"
+                          onError={(event) => {
+                            event.currentTarget.style.display = 'none';
+                            event.currentTarget.nextElementSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+
+                      <div
+                        className="absolute inset-0 items-center justify-center"
+                        style={{ display: course.thumbnail ? 'none' : 'flex' }}
+                      >
+                        <span className="text-6xl">
+                          {icons[course.category] || '✨'}
+                        </span>
+                      </div>
+
+                      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-900 to-transparent" />
                     </div>
 
                     <div className="flex flex-1 flex-col p-5">
@@ -351,20 +331,16 @@ export default function Courses() {
                           {course.category}
                         </span>
 
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-bold ${
-                            free
-                              ? 'bg-emerald-400/10 text-emerald-300'
-                              : 'bg-purple-400/10 text-purple-300'
-                          }`}
-                        >
+                        <span className={`rounded-full px-3 py-1 text-xs font-bold ${
+                          free
+                            ? 'bg-emerald-400/10 text-emerald-300'
+                            : 'bg-purple-400/10 text-purple-300'
+                        }`}>
                           {free ? 'FREE' : 'PREMIUM'}
                         </span>
                       </div>
 
-                      <h3 className="mt-4 text-xl font-bold">
-                        {course.title}
-                      </h3>
+                      <h3 className="mt-4 text-xl font-bold">{course.title}</h3>
 
                       <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">
                         {course.description}
@@ -377,9 +353,7 @@ export default function Courses() {
 
                       <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
                         <span className="font-bold text-white">
-                          {free
-                            ? 'Free'
-                            : `₹${Number(course.price).toFixed(0)}`}
+                          {free ? 'Free' : `₹${Number(course.price).toFixed(0)}`}
                         </span>
 
                         {enrolled ? (
@@ -416,17 +390,14 @@ export default function Courses() {
           )}
         </section>
 
-        {/* EXTERNAL MARKETPLACE */}
         <section className="mt-16 border-t border-white/10 pt-10">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-300">
               Global learning marketplace
             </p>
-
             <h2 className="mt-2 text-2xl font-black sm:text-3xl">
               Explore courses beyond SpaceVerse
             </h2>
-
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400">
               Discover learning opportunities from space agencies,
               universities and education platforms around the world.
@@ -435,10 +406,7 @@ export default function Courses() {
           </div>
 
           {externalError && (
-            <div
-              role="alert"
-              className="mt-6 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-200"
-            >
+            <div role="alert" className="mt-6 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-200">
               {externalError}
             </div>
           )}
@@ -450,11 +418,7 @@ export default function Courses() {
           ) : externalCourses.length === 0 ? (
             <div className="mt-8 rounded-2xl border border-dashed border-white/15 bg-slate-900/60 p-8 text-center">
               <div className="text-4xl">🌍</div>
-
-              <h3 className="mt-3 text-lg font-bold">
-                No external resources available
-              </h3>
-
+              <h3 className="mt-3 text-lg font-bold">No external resources available</h3>
               <p className="mt-2 text-sm text-slate-400">
                 Published provider resources will appear here.
               </p>
@@ -475,7 +439,6 @@ export default function Courses() {
                       <span className="text-3xl">
                         {icons[course.category] || '🛰️'}
                       </span>
-
                       <span className="rounded-full bg-purple-400/10 px-3 py-1 text-xs font-bold text-purple-200">
                         {getPriceLabel(course.price_type)}
                       </span>
@@ -484,33 +447,20 @@ export default function Courses() {
                     <p className="mt-5 text-xs font-bold uppercase tracking-wider text-purple-300">
                       {course.provider}
                     </p>
-
-                    <h3 className="mt-2 text-xl font-bold">
-                      {course.title}
-                    </h3>
-
+                    <h3 className="mt-2 text-xl font-bold">{course.title}</h3>
                     <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">
                       {course.description}
                     </p>
 
                     <div className="mt-5 flex flex-wrap gap-2 text-xs text-slate-400">
-                      <span className="rounded-full bg-white/5 px-3 py-1">
-                        {course.category}
-                      </span>
-
-                      <span className="rounded-full bg-white/5 px-3 py-1">
-                        {course.level}
-                      </span>
+                      <span className="rounded-full bg-white/5 px-3 py-1">{course.category}</span>
+                      <span className="rounded-full bg-white/5 px-3 py-1">{course.level}</span>
                     </div>
 
                     <a
                       href={getExternalUrl(course)}
                       target="_blank"
-                      rel={
-                        approvedAffiliate
-                          ? 'sponsored noopener noreferrer'
-                          : 'noopener noreferrer'
-                      }
+                      rel={approvedAffiliate ? 'sponsored noopener noreferrer' : 'noopener noreferrer'}
                       onClick={() => trackExternalClick(course)}
                       className="mt-6 inline-flex items-center justify-center rounded-xl border border-purple-400/40 bg-purple-400/10 px-4 py-3 text-sm font-bold text-purple-200 transition hover:bg-purple-400/20"
                     >
@@ -519,13 +469,11 @@ export default function Courses() {
 
                     {approvedAffiliate ? (
                       <p className="mt-3 text-xs leading-5 text-slate-500">
-                        Affiliate link: SpaceVerse may earn a commission
-                        from eligible purchases.
+                        Affiliate link: SpaceVerse may earn a commission from eligible purchases.
                       </p>
                     ) : (
                       <p className="mt-3 text-xs text-slate-500">
-                        External provider website. Course details and
-                        pricing are controlled by the provider.
+                        External provider website. Course details and pricing are controlled by the provider.
                       </p>
                     )}
                   </article>
