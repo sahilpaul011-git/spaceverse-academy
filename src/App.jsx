@@ -7,7 +7,7 @@ import {
   useLocation,
   Navigate,
 } from 'react-router-dom';
-
+import AdminCourseManager from './pages/AdminCourseManager';
 import Nav from './components/Nav';
 import Home from './pages/Home';
 import Explore from './pages/Explore';
@@ -237,6 +237,10 @@ function ProtectedDashboard() {
 
             <Link
               to="/admin"
+<Route
+  path="/admin-lessons"
+  element={<AdminCourseManager />}
+/>
               className="mt-5 inline-flex rounded-xl bg-purple-400 px-5 py-3 font-bold text-slate-950 hover:bg-purple-300"
             >
               Open Admin Dashboard →
