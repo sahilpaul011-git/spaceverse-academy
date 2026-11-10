@@ -1,5 +1,7 @@
+
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const navItems = [
   { label: "Explore", path: "/explore" },
@@ -11,6 +13,7 @@ const navItems = [
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, loading } = useAuth();
 
   function closeMenu() {
     setMenuOpen(false);
@@ -63,6 +66,16 @@ export default function Nav() {
         >
           Take a Quiz ↗
         </NavLink>
+
+        {!loading && (
+          <NavLink
+            className="sv-nav-cta"
+            to={user ? "/dashboard" : "/auth"}
+            onClick={closeMenu}
+          >
+            {user ? "My Space →" : "Sign In →"}
+          </NavLink>
+        )}
       </nav>
     </header>
   );
