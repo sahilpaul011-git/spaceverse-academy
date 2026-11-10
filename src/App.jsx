@@ -19,6 +19,7 @@ import MissionControl from './pages/MissionControl';
 import CosmicLab from './pages/CosmicLab';
 import WhatIfSimulator from './pages/WhatIfSimulator';
 import Auth from './pages/Auth';
+import Courses from './pages/Courses';
 import { useAuth } from './context/AuthContext';
 
 function DashboardLink({ to, icon, title, description }) {
@@ -30,15 +31,12 @@ function DashboardLink({ to, icon, title, description }) {
       <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-400/10 text-2xl">
         {icon}
       </div>
-
       <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">
         {title}
       </h3>
-
       <p className="mt-2 text-sm leading-6 text-slate-400">
         {description}
       </p>
-
       <span className="mt-4 inline-block text-sm font-semibold text-cyan-400">
         Open section →
       </span>
@@ -59,9 +57,7 @@ function ProtectedDashboard() {
     );
   }
 
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
+  if (!user) return <Navigate to="/auth" replace />;
 
   const displayName =
     profile?.full_name || user.email?.split('@')[0] || 'Space Explorer';
@@ -89,25 +85,19 @@ function ProtectedDashboard() {
   return (
     <section className="min-h-screen bg-slate-950 px-4 py-10 text-white sm:px-6">
       <div className="mx-auto max-w-6xl">
-
-        {/* Welcome panel */}
         <div className="relative overflow-hidden rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 p-6 sm:p-9">
           <div className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
-
           <div className="relative">
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">
               SpaceVerse Student Portal
             </p>
-
             <h1 className="mt-4 text-3xl font-black sm:text-4xl">
               Welcome back, {displayName}!
             </h1>
-
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
               Your next space adventure starts here. Explore the universe,
               complete missions and keep learning at your own pace.
             </p>
-
             <Link
               to="/explore"
               className="mt-6 inline-flex rounded-xl bg-cyan-400 px-5 py-3 font-bold text-slate-950 transition hover:bg-cyan-300"
@@ -117,30 +107,23 @@ function ProtectedDashboard() {
           </div>
         </div>
 
-        {/* Account statistics */}
         <div className="mt-7 grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-white/10 bg-slate-900 p-5">
             <p className="text-sm text-slate-400">Experience points</p>
-            <p className="mt-2 text-3xl font-black text-cyan-300">
-              {xp} XP
-            </p>
+            <p className="mt-2 text-3xl font-black text-cyan-300">{xp} XP</p>
             <p className="mt-2 text-xs text-slate-500">
               Your current XP from your student profile
             </p>
           </div>
-
           <div className="rounded-2xl border border-white/10 bg-slate-900 p-5">
             <p className="text-sm text-slate-400">Account type</p>
             <p className="mt-2 text-3xl font-black capitalize text-purple-300">
               {role}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
-              Your account role
-            </p>
+            <p className="mt-2 text-xs text-slate-500">Your account role</p>
           </div>
         </div>
 
-        {/* Learning shortcuts */}
         <div className="mt-10">
           <div className="mb-5">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
@@ -154,28 +137,31 @@ function ProtectedDashboard() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <DashboardLink
+              to="/courses"
+              icon="📚"
+              title="Courses"
+              description="Browse free and premium space-learning courses."
+            />
             <DashboardLink
               to="/explore"
               icon="🪐"
               title="Explore"
               description="Discover planets, moons and fascinating space facts."
             />
-
             <DashboardLink
               to="/missions"
               icon="🚀"
               title="Missions"
               description="Take on space challenges and build your XP."
             />
-
             <DashboardLink
               to="/cosmic-lab"
               icon="🔭"
               title="Cosmic Lab"
               description="Explore comparisons and scientific discoveries."
             />
-
             <DashboardLink
               to="/quiz"
               icon="🧠"
@@ -185,32 +171,26 @@ function ProtectedDashboard() {
           </div>
         </div>
 
-        {/* Course area */}
         <div className="mt-10 rounded-2xl border border-white/10 bg-slate-900/80 p-6 sm:p-8">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-300">
             My courses
           </p>
-
-          <h2 className="mt-2 text-2xl font-black">
-            Your learning journey
-          </h2>
-
+          <h2 className="mt-2 text-2xl font-black">Your learning journey</h2>
           <div className="mt-6 rounded-xl border border-dashed border-white/15 bg-slate-950/60 px-5 py-8 text-center">
             <div className="text-4xl">📚</div>
-            <h3 className="mt-3 text-lg font-bold">
-              Your course list is waiting
-            </h3>
+            <h3 className="mt-3 text-lg font-bold">Ready to start learning?</h3>
             <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-400">
-              Your enrolled courses and learning progress will appear here
-              once course enrolment is connected.
+              Browse the course catalogue and enrol in a free course.
             </p>
-            <p className="mt-3 text-xs text-slate-500">
-              No course progress has been assumed or added.
-            </p>
+            <Link
+              to="/courses"
+              className="mt-5 inline-flex rounded-xl bg-cyan-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-cyan-300"
+            >
+              Browse courses →
+            </Link>
           </div>
         </div>
 
-        {/* Account actions */}
         <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-white">Signed in as</p>
@@ -218,7 +198,6 @@ function ProtectedDashboard() {
               {user.email}
             </p>
           </div>
-
           <button
             type="button"
             onClick={handleSignOut}
@@ -230,10 +209,7 @@ function ProtectedDashboard() {
         </div>
 
         {errorMessage && (
-          <p
-            role="alert"
-            className="mt-4 rounded-xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-300"
-          >
+          <p role="alert" className="mt-4 rounded-xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-300">
             {errorMessage}
           </p>
         )}
@@ -252,12 +228,12 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <Nav />
-
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<ProtectedDashboard />} />
+          <Route path="/courses" element={<Courses />} />
           <Route path="/missions" element={<MissionControl />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/planet/:id" element={<Planet />} />
@@ -272,10 +248,7 @@ export default function App() {
             element={
               <div className="mx-auto max-w-4xl px-4 py-20 text-center">
                 <h1 className="text-3xl font-bold">Page not found</h1>
-                <Link
-                  to="/"
-                  className="mt-4 inline-block text-cyan-400 underline"
-                >
+                <Link to="/" className="mt-4 inline-block text-cyan-400 underline">
                   Return home
                 </Link>
               </div>
