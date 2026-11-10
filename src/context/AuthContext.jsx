@@ -5,9 +5,22 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { supabase } from '../lib/supabase';
+
+import {
+  supabase,
+  supabaseConfigError,
+} from '../lib/supabase';
 
 const AuthContext = createContext(null);
+
+function unavailableResult() {
+  return {
+    data: null,
+    error: new Error(
+      supabaseConfigError || 'Authentication is temporarily unavailable.'
+    ),
+  };
+}
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
@@ -15,6 +28,11 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     let active = true;
 
     async function loadProfile(user) {
@@ -41,20 +59,24 @@ export function AuthProvider({ children }) {
     }
 
     async function initialise() {
-      const { data, error } = await supabase.auth.getSession();
+      try {
+        const { data, error } = await supabase.auth.getSession();
 
-      if (!active) return;
+        if (!active) return;
 
-      if (error) {
-        console.error(error.message);
-        setLoading(false);
-        return;
+        if (error) {
+          console.error('Session error:', error.message);
+          setLoading(false);
+          return;
+        }
+
+        setSession(data.session);
+        await loadProfile(data.session?.user ?? null);
+      } catch (error) {
+        console.error('Authentication startup error:', error);
+      } finally {
+        if (active) setLoading(false);
       }
-
-      setSession(data.session);
-      await loadProfile(data.session?.user ?? null);
-
-      if (active) setLoading(false);
     }
 
     const {
@@ -65,6 +87,9 @@ export function AuthProvider({ children }) {
 
       Promise.resolve()
         .then(() => loadProfile(nextSession?.user ?? null))
+        .catch((error) => {
+          console.error('Profile loading error:', error);
+        })
         .finally(() => {
           if (active) setLoading(false);
         });
@@ -79,6 +104,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function signUp({ fullName, email, password }) {
+    if (!supabase) return unavailableResult();
+
     return supabase.auth.signUp({
       email,
       password,
@@ -89,6 +116,8 @@ export function AuthProvider({ children }) {
   }
 
   async function signIn({ email, password }) {
+    if (!supabase) return unavailableResult();
+
     return supabase.auth.signInWithPassword({
       email,
       password,
@@ -96,6 +125,8 @@ export function AuthProvider({ children }) {
   }
 
   async function signInWithProvider(provider) {
+    if (!supabase) return unavailableResult();
+
     if (!['google', 'facebook'].includes(provider)) {
       return {
         data: null,
@@ -113,10 +144,14 @@ export function AuthProvider({ children }) {
   }
 
   async function signOut() {
+    if (!supabase) return unavailableResult();
+
     return supabase.auth.signOut();
   }
 
   async function resetPassword(email) {
+    if (!supabase) return unavailableResult();
+
     return supabase.auth.resetPasswordForEmail(email, {
       redirectTo:
         window.location.origin + window.location.pathname,
@@ -151,5 +186,4 @@ export function useAuth() {
   }
 
   return context;
-  }
-        
+}
