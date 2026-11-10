@@ -13,7 +13,9 @@ function getVideoEmbed(url) {
 
     if (host === 'youtu.be') {
       const id = parsed.pathname.slice(1);
-      return id ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}` : null;
+      return id
+        ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}`
+        : null;
     }
 
     if (host === 'youtube.com' || host === 'm.youtube.com') {
@@ -24,6 +26,7 @@ function getVideoEmbed(url) {
       }
 
       const match = parsed.pathname.match(/^\/embed\/([a-zA-Z0-9_-]+)/);
+
       return match
         ? `https://www.youtube-nocookie.com/embed/${match[1]}`
         : null;
@@ -67,7 +70,6 @@ export default function CoursePlayer() {
     setError('');
 
     try {
-      // Confirm that the signed-in student is enrolled.
       const { data: enrollment, error: enrollmentError } = await supabase
         .from('enrollments')
         .select('course_id')
@@ -82,38 +84,48 @@ export default function CoursePlayer() {
         setLessons([]);
         setCompletedIds([]);
         setCertificate(null);
-        setError('You are not enrolled in this course. Please enrol before opening the lessons.');
+        setError(
+          'You are not enrolled in this course. Please enrol before opening the lessons.'
+        );
         return;
       }
 
-      const [courseResult, lessonResult, progressResult, certificateResult] =
-        await Promise.all([
-          supabase
-            .from('courses')
-            .select('id, title, description, category, level, is_free')
-            .eq('id', courseId)
-            .eq('is_published', true)
-            .maybeSingle(),
+      const [
+        courseResult,
+        lessonResult,
+        progressResult,
+        certificateResult,
+      ] = await Promise.all([
+        supabase
+          .from('courses')
+          .select(
+            'id, title, description, category, level, is_free, thumbnail'
+          )
+          .eq('id', courseId)
+          .eq('is_published', true)
+          .maybeSingle(),
 
-          supabase
-            .from('course_lessons')
-            .select('id, course_id, title, description, video_url, lesson_content, sort_order')
-            .eq('course_id', courseId)
-            .eq('is_published', true)
-            .order('sort_order', { ascending: true }),
+        supabase
+          .from('course_lessons')
+          .select(
+            'id, course_id, title, description, video_url, lesson_content, sort_order, image_url'
+          )
+          .eq('course_id', courseId)
+          .eq('is_published', true)
+          .order('sort_order', { ascending: true }),
 
-          supabase
-            .from('lesson_progress')
-            .select('lesson_id')
-            .eq('student_id', user.id),
+        supabase
+          .from('lesson_progress')
+          .select('lesson_id')
+          .eq('student_id', user.id),
 
-          supabase
-            .from('certificates')
-            .select('id, certificate_code, issued_at, course_id')
-            .eq('student_id', user.id)
-            .eq('course_id', courseId)
-            .maybeSingle(),
-        ]);
+        supabase
+          .from('certificates')
+          .select('id, certificate_code, issued_at, course_id')
+          .eq('student_id', user.id)
+          .eq('course_id', courseId)
+          .maybeSingle(),
+      ]);
 
       if (courseResult.error) throw courseResult.error;
       if (lessonResult.error) throw lessonResult.error;
@@ -180,7 +192,6 @@ export default function CoursePlayer() {
 
   async function markLessonComplete() {
     if (!activeLesson || !user || !supabase || marking) return;
-
     if (completedIds.includes(activeLesson.id)) return;
 
     setMarking(true);
@@ -207,8 +218,6 @@ export default function CoursePlayer() {
 
       setMessage('Lesson completed! Your progress has been saved.');
 
-      // The Supabase database trigger issues a certificate
-      // when every published lesson in the enrolled course is complete.
       const { data: issuedCertificate, error: certificateError } =
         await supabase
           .from('certificates')
@@ -221,7 +230,9 @@ export default function CoursePlayer() {
 
       if (issuedCertificate) {
         setCertificate(issuedCertificate);
-        setMessage('Congratulations! Your course certificate has been issued.');
+        setMessage(
+          'Congratulations! Your course certificate has been issued.'
+        );
       }
     } catch (err) {
       setError(err.message || 'Could not save lesson progress.');
@@ -243,7 +254,6 @@ export default function CoursePlayer() {
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-10 text-white sm:px-6">
       <div className="mx-auto max-w-6xl">
-
         <Link
           to="/courses"
           className="text-sm font-semibold text-cyan-300 hover:text-cyan-200"
@@ -284,36 +294,51 @@ export default function CoursePlayer() {
           </section>
         ) : (
           <>
-            <section className="mt-5 rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 p-6 sm:p-9">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
-                SpaceVerse Learning Centre
-              </p>
+            <section className="mt-5 overflow-hidden rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950">
+              {course.thumbnail && (
+                <img
+                  src={course.thumbnail}
+                  alt={`${course.title} course cover`}
+                  className="max-h-80 w-full object-cover"
+                  onError={(event) => {
+                    event.currentTarget.style.display = 'none';
+                  }}
+                />
+              )}
 
-              <h1 className="mt-3 text-3xl font-black sm:text-4xl">
-                {course.title}
-              </h1>
+              <div className="p-6 sm:p-9">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
+                  SpaceVerse Learning Centre
+                </p>
 
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-                {course.description}
-              </p>
+                <h1 className="mt-3 text-3xl font-black sm:text-4xl">
+                  {course.title}
+                </h1>
 
-              <div className="mt-5 flex flex-wrap gap-3 text-xs text-slate-300">
-                <span className="rounded-full bg-white/10 px-3 py-2">
-                  {course.category}
-                </span>
-                <span className="rounded-full bg-white/10 px-3 py-2">
-                  {course.level}
-                </span>
-                <span className="rounded-full bg-white/10 px-3 py-2">
-                  {lessons.length} lessons
-                </span>
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
+                  {course.description}
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-3 text-xs text-slate-300">
+                  <span className="rounded-full bg-white/10 px-3 py-2">
+                    {course.category}
+                  </span>
+                  <span className="rounded-full bg-white/10 px-3 py-2">
+                    {course.level}
+                  </span>
+                  <span className="rounded-full bg-white/10 px-3 py-2">
+                    {lessons.length} lessons
+                  </span>
+                </div>
               </div>
             </section>
 
             <section className="mt-6 rounded-2xl border border-white/10 bg-slate-900 p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm text-slate-400">Your course progress</p>
+                  <p className="text-sm text-slate-400">
+                    Your course progress
+                  </p>
                   <p className="mt-1 text-2xl font-black text-cyan-300">
                     {progressPercent}%
                   </p>
@@ -360,7 +385,6 @@ export default function CoursePlayer() {
             )}
 
             <div className="mt-8 grid gap-6 lg:grid-cols-[320px_1fr]">
-
               <aside className="h-fit rounded-2xl border border-white/10 bg-slate-900 p-5">
                 <h2 className="text-lg font-black">Course lessons</h2>
 
@@ -392,7 +416,13 @@ export default function CoursePlayer() {
                             <span className="text-sm font-bold">
                               {index + 1}. {lesson.title}
                             </span>
-                            <span className={completed ? 'text-emerald-300' : 'text-slate-500'}>
+                            <span
+                              className={
+                                completed
+                                  ? 'text-emerald-300'
+                                  : 'text-slate-500'
+                              }
+                            >
                               {completed ? '✓' : '○'}
                             </span>
                           </span>
@@ -424,6 +454,20 @@ export default function CoursePlayer() {
                       <p className="mt-3 text-sm leading-7 text-slate-400">
                         {activeLesson.description}
                       </p>
+                    )}
+
+                    {activeLesson.image_url && (
+                      <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-slate-950">
+                        <img
+                          src={activeLesson.image_url}
+                          alt={`${activeLesson.title} illustration`}
+                          loading="lazy"
+                          className="max-h-96 w-full object-cover"
+                          onError={(event) => {
+                            event.currentTarget.parentElement.style.display = 'none';
+                          }}
+                        />
+                      </div>
                     )}
 
                     {activeLesson.video_url && (
@@ -478,7 +522,9 @@ export default function CoursePlayer() {
                           disabled={marking}
                           className="w-full rounded-xl bg-cyan-400 px-6 py-4 font-bold text-slate-950 transition hover:bg-cyan-300 disabled:opacity-60 sm:w-auto"
                         >
-                          {marking ? 'Saving progress...' : 'Mark lesson as complete ✓'}
+                          {marking
+                            ? 'Saving progress...'
+                            : 'Mark lesson as complete ✓'}
                         </button>
                       )}
                     </div>
