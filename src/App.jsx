@@ -9,6 +9,9 @@ import {
 } from 'react-router-dom';
 
 import AdminCourseManager from './pages/AdminCourseManager';
+import CoursePlayer from './pages/CoursePlayer';
+import Certificates from './pages/Certificates';
+
 import Nav from './components/Nav';
 import Home from './pages/Home';
 import Explore from './pages/Explore';
@@ -179,6 +182,13 @@ function ProtectedDashboard() {
               icon="📚"
               title="Courses"
               description="Browse free and premium space-learning courses."
+            />
+
+            <DashboardLink
+              to="/certificates"
+              icon="🏆"
+              title="My Certificates"
+              description="View and print certificates earned from completed courses."
             />
 
             {role === 'admin' && (
@@ -357,6 +367,16 @@ export default function App() {
           />
 
           <Route path="/courses" element={<Courses />} />
+
+          <Route
+            path="/learn/:courseId"
+            element={<CoursePlayer />}
+          />
+
+          <Route
+            path="/certificates"
+            element={<Certificates />}
+          />
 
           <Route path="/missions" element={<MissionControl />} />
 
