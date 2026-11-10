@@ -4,7 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 
-const categories = ['All', 'Astronomy', 'Planet Science', 'Space Technology'];
+const categories = [
+  'All',
+  'Astronomy',
+  'Planet Science',
+  'Space Technology',
+];
 
 const icons = {
   Astronomy: '🌌',
@@ -34,7 +39,9 @@ export default function Courses() {
     setError('');
 
     if (!supabase) {
-      setError('Course catalogue is temporarily unavailable. Please try again later.');
+      setError(
+        'Course catalogue is temporarily unavailable. Please try again later.'
+      );
       setLoading(false);
       setExternalLoading(false);
       return;
@@ -54,14 +61,17 @@ export default function Courses() {
       setCourses(data || []);
 
       if (user) {
-        const { data: enrolments, error: enrolmentError } = await supabase
-          .from('enrollments')
-          .select('course_id')
-          .eq('student_id', user.id);
+        const { data: enrolments, error: enrolmentError } =
+          await supabase
+            .from('enrollments')
+            .select('course_id')
+            .eq('student_id', user.id);
 
         if (enrolmentError) throw enrolmentError;
 
-        setEnrolledIds((enrolments || []).map((item) => item.course_id));
+        setEnrolledIds(
+          (enrolments || []).map((item) => item.course_id)
+        );
       } else {
         setEnrolledIds([]);
       }
@@ -110,7 +120,10 @@ export default function Courses() {
 
   const visibleCourses = useMemo(() => {
     if (category === 'All') return courses;
-    return courses.filter((course) => course.category === category);
+
+    return courses.filter(
+      (course) => course.category === category
+    );
   }, [courses, category]);
 
   async function handleEnroll(course) {
@@ -131,6 +144,11 @@ export default function Courses() {
 
     if (enrolledIds.includes(course.id)) return;
 
+    if (!supabase) {
+      setError('The enrolment service is unavailable.');
+      return;
+    }
+
     setEnrollingId(course.id);
 
     try {
@@ -143,14 +161,21 @@ export default function Courses() {
 
       if (enrolmentError) {
         if (enrolmentError.code === '23505') {
-          setEnrolledIds((current) => [...current, course.id]);
+          setEnrolledIds((current) =>
+            current.includes(course.id)
+              ? current
+              : [...current, course.id]
+          );
+
           setMessage('You are already enrolled in this course.');
         } else {
           throw enrolmentError;
         }
       } else {
         setEnrolledIds((current) => [...current, course.id]);
-        setMessage(`Successfully enrolled in ${course.title}!`);
+        setMessage(
+          `Successfully enrolled in ${course.title}!`
+        );
       }
     } catch (err) {
       setError(err.message || 'Could not enrol in this course.');
@@ -168,7 +193,6 @@ export default function Courses() {
         user_id: user.id,
       });
     } catch (err) {
-      // Tracking errors should never prevent opening the provider website.
       console.error('External click tracking failed:', err);
     }
   }
@@ -187,6 +211,7 @@ export default function Courses() {
   function getPriceLabel(type) {
     if (type === 'free') return 'FREE';
     if (type === 'paid') return 'PAID';
+
     return 'FREE / PAID OPTIONS';
   }
 
@@ -194,6 +219,7 @@ export default function Courses() {
     <main className="min-h-screen bg-slate-950 px-4 py-12 text-white sm:px-6">
       <div className="mx-auto max-w-6xl">
 
+        {/* HERO SECTION */}
         <section className="relative overflow-hidden rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 p-7 sm:p-10">
           <div className="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
 
@@ -216,6 +242,7 @@ export default function Courses() {
               <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-emerald-300">
                 ✓ Free learning available
               </span>
+
               <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-cyan-300">
                 ✦ Global learning resources
               </span>
@@ -223,12 +250,14 @@ export default function Courses() {
           </div>
         </section>
 
+        {/* INTERNAL COURSES */}
         <section className="mt-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
                 SpaceVerse courses
               </p>
+
               <h2 className="mt-2 text-2xl font-black sm:text-3xl">
                 Learn inside SpaceVerse
               </h2>
@@ -242,6 +271,7 @@ export default function Courses() {
             </Link>
           </div>
 
+          {/* CATEGORY FILTERS */}
           <div className="mt-6 flex flex-wrap gap-2">
             {categories.map((item) => (
               <button
@@ -259,6 +289,7 @@ export default function Courses() {
             ))}
           </div>
 
+          {/* SUCCESS MESSAGE */}
           {message && (
             <div
               role="status"
@@ -268,6 +299,7 @@ export default function Courses() {
             </div>
           )}
 
+          {/* ERROR MESSAGE */}
           {error && (
             <div
               role="alert"
@@ -277,6 +309,7 @@ export default function Courses() {
             </div>
           )}
 
+          {/* COURSE LIST */}
           {loading ? (
             <div className="py-20 text-center text-cyan-300">
               Loading SpaceVerse courses...
@@ -284,9 +317,11 @@ export default function Courses() {
           ) : visibleCourses.length === 0 ? (
             <div className="mt-8 rounded-2xl border border-dashed border-white/15 bg-slate-900/60 p-10 text-center">
               <div className="text-4xl">🔭</div>
+
               <h3 className="mt-4 text-xl font-bold">
                 No courses found
               </h3>
+
               <p className="mt-2 text-sm text-slate-400">
                 There are no published courses in this category yet.
               </p>
@@ -295,6 +330,7 @@ export default function Courses() {
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {visibleCourses.map((course) => {
                 const enrolled = enrolledIds.includes(course.id);
+
                 const free =
                   course.is_free && Number(course.price) === 0;
 
@@ -339,31 +375,38 @@ export default function Courses() {
                         <span>◷ {course.duration_minutes} minutes</span>
                       </div>
 
-                      <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
+                      <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
                         <span className="font-bold text-white">
-                          {free ? 'Free' : `₹${Number(course.price).toFixed(0)}`}
+                          {free
+                            ? 'Free'
+                            : `₹${Number(course.price).toFixed(0)}`}
                         </span>
 
-                        <button
-                          type="button"
-                          onClick={() => handleEnroll(course)}
-                          disabled={enrollingId === course.id || enrolled}
-                          className={`rounded-xl px-4 py-2 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60 ${
-                            enrolled
-                              ? 'border border-emerald-400/30 bg-emerald-400/10 text-emerald-300'
-                              : free
+                        {enrolled ? (
+                          <Link
+                            to={`/learn/${course.id}`}
+                            className="rounded-xl bg-emerald-400 px-4 py-2 text-center text-sm font-bold text-slate-950 transition hover:bg-emerald-300"
+                          >
+                            Continue learning →
+                          </Link>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleEnroll(course)}
+                            disabled={enrollingId === course.id}
+                            className={`rounded-xl px-4 py-2 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                              free
                                 ? 'bg-cyan-400 text-slate-950 hover:bg-cyan-300'
                                 : 'border border-purple-400/40 bg-purple-400/10 text-purple-200 hover:bg-purple-400/20'
-                          }`}
-                        >
-                          {enrollingId === course.id
-                            ? 'Enrolling...'
-                            : enrolled
-                              ? 'Enrolled ✓'
+                            }`}
+                          >
+                            {enrollingId === course.id
+                              ? 'Enrolling...'
                               : free
                                 ? 'Enrol free'
                                 : 'Coming soon'}
-                        </button>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </article>
@@ -373,14 +416,17 @@ export default function Courses() {
           )}
         </section>
 
+        {/* EXTERNAL MARKETPLACE */}
         <section className="mt-16 border-t border-white/10 pt-10">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-300">
               Global learning marketplace
             </p>
+
             <h2 className="mt-2 text-2xl font-black sm:text-3xl">
               Explore courses beyond SpaceVerse
             </h2>
+
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400">
               Discover learning opportunities from space agencies,
               universities and education platforms around the world.
@@ -404,9 +450,11 @@ export default function Courses() {
           ) : externalCourses.length === 0 ? (
             <div className="mt-8 rounded-2xl border border-dashed border-white/15 bg-slate-900/60 p-8 text-center">
               <div className="text-4xl">🌍</div>
+
               <h3 className="mt-3 text-lg font-bold">
                 No external resources available
               </h3>
+
               <p className="mt-2 text-sm text-slate-400">
                 Published provider resources will appear here.
               </p>
@@ -427,6 +475,7 @@ export default function Courses() {
                       <span className="text-3xl">
                         {icons[course.category] || '🛰️'}
                       </span>
+
                       <span className="rounded-full bg-purple-400/10 px-3 py-1 text-xs font-bold text-purple-200">
                         {getPriceLabel(course.price_type)}
                       </span>
@@ -448,6 +497,7 @@ export default function Courses() {
                       <span className="rounded-full bg-white/5 px-3 py-1">
                         {course.category}
                       </span>
+
                       <span className="rounded-full bg-white/5 px-3 py-1">
                         {course.level}
                       </span>
@@ -467,14 +517,12 @@ export default function Courses() {
                       Visit provider website ↗
                     </a>
 
-                    {approvedAffiliate && (
+                    {approvedAffiliate ? (
                       <p className="mt-3 text-xs leading-5 text-slate-500">
                         Affiliate link: SpaceVerse may earn a commission
                         from eligible purchases.
                       </p>
-                    )}
-
-                    {!approvedAffiliate && (
+                    ) : (
                       <p className="mt-3 text-xs text-slate-500">
                         External provider website. Course details and
                         pricing are controlled by the provider.
