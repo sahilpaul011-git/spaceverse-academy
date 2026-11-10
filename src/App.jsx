@@ -7,6 +7,7 @@ import {
   useLocation,
   Navigate,
 } from 'react-router-dom';
+
 import AdminCourseManager from './pages/AdminCourseManager';
 import Nav from './components/Nav';
 import Home from './pages/Home';
@@ -181,12 +182,21 @@ function ProtectedDashboard() {
             />
 
             {role === 'admin' && (
-              <DashboardLink
-                to="/admin"
-                icon="🛠️"
-                title="Admin Dashboard"
-                description="Manage courses, external providers, affiliate links and marketplace activity."
-              />
+              <>
+                <DashboardLink
+                  to="/admin"
+                  icon="🛠️"
+                  title="Admin Dashboard"
+                  description="Manage courses, external providers, affiliate links and marketplace activity."
+                />
+
+                <DashboardLink
+                  to="/admin-lessons"
+                  icon="🎓"
+                  title="Course & Lesson Manager"
+                  description="Create lessons, add videos and manage course content."
+                />
+              </>
             )}
 
             <DashboardLink
@@ -231,20 +241,25 @@ function ProtectedDashboard() {
             </h2>
 
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              Access your administration tools to manage external
-              learning resources and marketplace activity.
+              Access your administration tools to manage learning resources,
+              lessons and marketplace activity.
             </p>
 
-            <Link
-              to="/admin"
-<Route
-  path="/admin-lessons"
-  element={<AdminCourseManager />}
-/>
-              className="mt-5 inline-flex rounded-xl bg-purple-400 px-5 py-3 font-bold text-slate-950 hover:bg-purple-300"
-            >
-              Open Admin Dashboard →
-            </Link>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                to="/admin"
+                className="inline-flex rounded-xl bg-purple-400 px-5 py-3 font-bold text-slate-950 hover:bg-purple-300"
+              >
+                Open Admin Dashboard →
+              </Link>
+
+              <Link
+                to="/admin-lessons"
+                className="inline-flex rounded-xl border border-purple-300/30 px-5 py-3 font-bold text-purple-200 hover:bg-purple-400/10"
+              >
+                Manage Lessons →
+              </Link>
+            </div>
           </div>
         )}
 
@@ -335,6 +350,11 @@ export default function App() {
           />
 
           <Route path="/admin" element={<AdminDashboard />} />
+
+          <Route
+            path="/admin-lessons"
+            element={<AdminCourseManager />}
+          />
 
           <Route path="/courses" element={<Courses />} />
 
