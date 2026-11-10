@@ -621,4 +621,129 @@ export default function AdminQuizManager() {
 
               {questions.length === 0 ? (
                 <div className="mt-4 rounded-2xl border border-dashed border-white/15 bg-slate-900 p-7 text-center text-slate-400">
-                  Save quiz settings, then add 
+                  Save quiz settings, then add your first question.
+                </div>
+              ) : (
+                <div className="mt-4 grid gap-3">
+                  {questions.map((question, index) => (
+                    <article key={question.id} className="rounded-2xl border border-white/10 bg-slate-900 p-5">
+                      <p className="text-xs font-bold text-cyan-300">
+                        QUESTION {index + 1}
+                      </p>
+                      <h3 className="mt-2 font-bold">{question.question}</h3>
+
+                      <div className="mt-3 grid gap-2">
+                        {question.options.map((option, optionIndex) => (
+                          <p
+                            key={optionIndex}
+                            className={`rounded-lg p-3 text-sm ${
+                              optionIndex === question.correct_option
+                                ? 'border border-emerald-400/30 bg-emerald-400/10 text-emerald-300'
+                                : 'bg-slate-950 text-slate-400'
+                            }`}
+                          >
+                            {optionIndex + 1}. {option}
+                            {optionIndex === question.correct_option ? ' ✓ Correct' : ''}
+                          </p>
+                        ))}
+                      </div>
+
+                      <p className="mt-3 text-sm leading-6 text-slate-400">
+                        Explanation: {question.explanation}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => startEditQuestion(question)}
+                          className="rounded-lg border border-cyan-400/30 px-4 py-2 text-sm text-cyan-300"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteQuestion(question)}
+                          className="rounded-lg border border-red-400/30 px-4 py-2 text-sm text-red-300"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {showAttempts && (
+              <section className="mt-7 rounded-2xl border border-white/10 bg-slate-900 p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-xl font-black">Student quiz attempts</h2>
+                  <button
+                    type="button"
+                    onClick={() => setShowAttempts(false)}
+                    className="rounded-lg border border-white/20 px-3 py-2 text-sm"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                {attempts.length === 0 ? (
+                  <p className="mt-4 text-sm text-slate-400">No attempts recorded yet.</p>
+                ) : (
+                  <div className="mt-4 grid gap-3">
+                    {attempts.map((attempt) => (
+                      <article key={attempt.id} className="rounded-xl bg-slate-950 p-4">
+                        <p className="break-all text-xs text-slate-500">
+                          Student ID: {attempt.student_id}
+                        </p>
+                        <p className="mt-2 font-bold">
+                          {attempt.score}/{attempt.total_questions} correct · {attempt.percentage}%
+                        </p>
+                        <p className={`mt-1 text-sm ${attempt.passed ? 'text-emerald-300' : 'text-amber-300'}`}>
+                          {attempt.passed ? 'Passed' : 'Not passed'}
+                          {attempt.xp_awarded ? ' · 20 XP awarded' : ''}
+                        </p>
+                        <p className="mt-1 text-xs text-slate-500">
+                          {new Date(attempt.attempted_at).toLocaleString()}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
+          </>
+        )}
+
+        <section className="mt-8 rounded-2xl border border-white/10 bg-slate-900 p-5">
+          <h2 className="text-lg font-bold">Existing quizzes</h2>
+
+          {quizzes.length === 0 ? (
+            <p className="mt-3 text-sm text-slate-400">No quizzes created yet.</p>
+          ) : (
+            <div className="mt-4 grid gap-3">
+              {quizzes.map((quiz) => (
+                <button
+                  key={quiz.id}
+                  type="button"
+                  onClick={() => selectLesson(quiz.lesson_id)}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-slate-950 p-4 text-left"
+                >
+                  <span>
+                    <span className="block font-bold">{quiz.title}</span>
+                    <span className="mt-1 block text-xs text-slate-400">
+                      {lessonName(quiz.lesson_id)} · Pass: {quiz.pass_percentage}%
+                    </span>
+                  </span>
+                  <span className={`text-xs font-bold ${quiz.is_published ? 'text-emerald-300' : 'text-amber-300'}`}>
+                    {quiz.is_published ? 'Published' : 'Draft'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
+  );
+}
