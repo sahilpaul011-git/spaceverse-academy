@@ -1,0 +1,52 @@
+
+{
+  "date": "2026-11-12",
+  "title": "Daily Space Challenge",
+  "questions": [
+    {
+      "id": "demo-1",
+      "question": "Which planet is known as the Red Planet?",
+      "options": ["Earth", "Mars", "Venus", "Jupiter"],
+      "correctAnswer": 1,
+      "explanation": "Mars looks reddish because its surface contains iron oxide.",
+      "difficulty": "easy",
+      "topic": "Planets"
+    },
+    {
+      "id": "demo-2",
+      "question": "Which planet has the most visible rings?",
+      "options": ["Saturn", "Earth", "Mars", "Mercury"],
+      "correctAnswer": 0,
+      "explanation": "Saturn is famous for its beautiful ring system.",
+      "difficulty": "easy",
+      "topic": "Planets"
+    },
+    {
+      "id": "demo-3",
+      "question": "What is the closest star to Earth?",
+      "options": ["Sirius", "Sun", "Polaris", "Vega"],
+      "correctAnswer": 1,
+      "explanation": "The Sun is our nearest star.",
+      "difficulty": "easy",
+      "topic": "Stars"
+    },
+    {
+      "id": "demo-4",
+      "question": "What do astronauts wear in space?",
+      "options": ["Raincoat", "Spacesuit", "School uniform", "Jacket"],
+      "correctAnswer": 1,
+      "explanation": "Spacesuits protect astronauts in the space environment.",
+      "difficulty": "easy",
+      "topic": "Astronauts"
+    },
+    {
+      "id": "demo-5",
+      "question": "Which planet is the largest in our Solar System?",
+      "options": ["Earth", "Neptune", "Jupiter", "Mars"],
+      "correctAnswer": 2,
+      "explanation": "Jupiter is the largest planet in our Solar System.",
+      "difficulty": "easy",
+      "topic": "Planets"
+    }
+  ]
+}
